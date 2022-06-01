@@ -2,6 +2,7 @@ import { createContext, useContext, ReactNode, useState, useCallback } from 'rea
 import { User, UserV1 } from '@acme-shop/shared-ts';
 import { logger } from '../logging/logger';
 
+// FE-100: Initial frontend with UserV1 types (2022-06)
 /**
  * UserState uses union type User | UserV1 to show type-level legacy vs new.
  * NOTE: UserV1 kept for backwards compatibility with legacy profile page.
