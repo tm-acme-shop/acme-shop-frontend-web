@@ -1,4 +1,4 @@
-import { UserV1 } from '@acme-shop/shared-ts';
+import { UserV1, User } from '@acme-shop/shared-ts';
 
 export interface Product {
   id: string;
@@ -42,4 +42,10 @@ export interface SearchResult {
   total: number;
 }
 
-export type { UserV1 };
+export interface ProfileViewModel {
+  user: User | UserV1;
+  displayName: string;
+  avatarUrl?: string;
+}
+
+export type { UserV1, User };

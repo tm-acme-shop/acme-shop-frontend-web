@@ -1,5 +1,14 @@
 const AUTH_TOKEN_KEY = 'acme_auth_token';
 const LEGACY_USER_ID_KEY = 'acme_legacy_user_id';
+const USER_ID_KEY = 'acme_user_id';
+
+export function getUserId(): string {
+  return localStorage.getItem(USER_ID_KEY) || '';
+}
+
+export function setUserId(userId: string): void {
+  localStorage.setItem(USER_ID_KEY, userId);
+}
 
 export function getLegacyUserId(): string {
   console.log('Getting legacy user ID');

@@ -3,6 +3,9 @@ import { useUser } from '../../hooks/useUser';
 import { useCart } from '../../hooks/useCart';
 import { getUserDisplayName } from '../../store/userStore';
 import { Navigation } from './Navigation';
+import { createLogger } from '../../logging/logger';
+
+const logger = createLogger('Header');
 
 export function Header() {
   const { user } = useUser();
@@ -10,10 +13,12 @@ export function Header() {
 
   const handleProfileClick = () => {
     console.log('Profile clicked');
+    logger.info('Profile clicked');
   };
 
   const handleCartClick = () => {
     console.log('Cart clicked', itemCount);
+    logger.info('Cart clicked', { itemCount });
   };
 
   return (

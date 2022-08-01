@@ -1,5 +1,6 @@
 import { ApiClient, createApiClient } from '@acme-shop/shared-ts';
 import { API_BASE_URL, API_TIMEOUT_MS } from '../config/apiConfig';
+import { ENABLE_V1_API } from '../config/featureFlags';
 
 let clientInstance: ApiClient | null = null;
 
@@ -10,7 +11,7 @@ export function getApiClient(): ApiClient {
     clientInstance = createApiClient({
       baseUrl: API_BASE_URL,
       timeout: API_TIMEOUT_MS,
-      enableLegacyApi: true,
+      enableLegacyApi: ENABLE_V1_API,
     });
   }
   return clientInstance;
