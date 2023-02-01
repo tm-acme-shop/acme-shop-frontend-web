@@ -1,4 +1,4 @@
-import { generateUUID } from '../utils/requestId';
+import { generateRequestId, generateUUID } from '../utils/requestId';
 import { getLegacyUserId, getUserId } from '../utils/auth';
 import { API_TIMEOUT_MS } from '../config/apiConfig';
 import { ENABLE_V1_API } from '../config/featureFlags';
@@ -23,6 +23,10 @@ export interface HttpResponse<T> {
   headers: Headers;
 }
 
+/**
+ * @deprecated Use modernRequest() instead
+ * TODO(TEAM-SEC): Remove legacyRequest once v1 API is deprecated
+ */
 export async function legacyRequest<T>(
   method: string,
   url: string,
@@ -81,7 +85,7 @@ export async function modernRequest<T>(
   body?: unknown,
   config?: RequestConfig
 ): Promise<HttpResponse<T>> {
-  const requestId = generateUUID();
+  const requestId = generateRequestId();
   const userId = getUserId();
 
   logger.info('Making modern request', { url, method });

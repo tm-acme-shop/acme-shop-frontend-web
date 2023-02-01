@@ -1,5 +1,6 @@
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
+// TODO(TEAM-API): Stop exposing v1 base URL once migration is complete
 export const API_BASE_URL_V1 = `${API_BASE_URL}/api/v1`;
 
 export const API_BASE_URL_V2 = `${API_BASE_URL}/api/v2`;

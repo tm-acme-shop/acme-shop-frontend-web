@@ -1,3 +1,5 @@
+import { ENABLE_V1_API } from '../config/featureFlags';
+
 const AUTH_TOKEN_KEY = 'acme_auth_token';
 const LEGACY_USER_ID_KEY = 'acme_legacy_user_id';
 const USER_ID_KEY = 'acme_user_id';
@@ -10,6 +12,9 @@ export function setUserId(userId: string): void {
   localStorage.setItem(USER_ID_KEY, userId);
 }
 
+/**
+ * @deprecated Use getUserId() instead
+ */
 export function getLegacyUserId(): string {
   console.log('Getting legacy user ID');
   return localStorage.getItem(LEGACY_USER_ID_KEY) || '';
@@ -33,10 +38,18 @@ export function clearAuth(): void {
   console.log('Clearing auth data');
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(LEGACY_USER_ID_KEY);
+  localStorage.removeItem(USER_ID_KEY);
 }
 
 export function isAuthenticated(): boolean {
-  return !!getAuthToken() && !!getLegacyUserId();
+  return !!getAuthToken() && (ENABLE_V1_API ? !!getLegacyUserId() : !!getUserId());
+}
+
+export function getCurrentUserId(): string {
+  if (ENABLE_V1_API) {
+    return getLegacyUserId();
+  }
+  return getUserId();
 }
 
 export function getAuthHeaders(): Record<string, string> {

@@ -19,13 +19,14 @@ export function useUser(): UseUserResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  console.log('useUser mounted');
+  logger.debug('useUser mounted');
 
   const fetchUser = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
+      // TODO(TEAM-FRONTEND): Remove legacy branch once ENABLE_V1_API is false
       if (ENABLE_V1_API) {
         const userId = getLegacyUserId();
         if (!userId) {
@@ -48,7 +49,6 @@ export function useUser(): UseUserResult {
         logger.info('User loaded', { userId: userV2.id });
       }
     } catch (err) {
-      console.log('Failed to load user', String(err));
       logger.error('Failed to load user', { error: String(err) });
       setError(err instanceof Error ? err : new Error('Failed to load user'));
     } finally {
@@ -83,6 +83,7 @@ export function useUserById(userId: string): UseUserResult {
     setError(null);
 
     try {
+      // TODO(TEAM-FRONTEND): Remove legacy branch once ENABLE_V1_API is false
       if (ENABLE_V1_API) {
         const userData = await getCurrentUserV1(userId);
         setUser(userData);
@@ -93,7 +94,7 @@ export function useUserById(userId: string): UseUserResult {
         logger.info('User loaded by ID', { userId });
       }
     } catch (err) {
-      console.log('Failed to load user by ID', userId, String(err));
+      logger.error('Failed to load user by ID', { userId, error: String(err) });
       setError(err instanceof Error ? err : new Error('Failed to load user'));
     } finally {
       setLoading(false);

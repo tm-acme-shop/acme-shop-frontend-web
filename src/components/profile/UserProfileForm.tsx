@@ -1,8 +1,12 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { UserV1 } from '@acme-shop/shared-ts';
+import { UserV1, User } from '@acme-shop/shared-ts';
+import { createLogger } from '../../logging/logger';
 
+const logger = createLogger('UserProfileForm');
+
+// TODO(TEAM-FRONTEND): Remove support for UserV1 once v1 API is deprecated
 interface UserProfileFormProps {
-  user: UserV1;
+  user: UserV1 | User;
 }
 
 interface FormData {
@@ -39,14 +43,14 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
     setError(null);
     setSuccess(false);
 
-    console.log('Profile update submitted', user.id);
+    logger.info('Profile update submitted', { userId: user.id });
 
     try {
-      console.log('Profile update - v1 API not supported for updates');
+      logger.info('Profile update - v1 API not supported for updates');
       setSuccess(true);
-      console.log('Profile updated successfully', user.id);
+      logger.info('Profile updated successfully', { userId: user.id });
     } catch (err) {
-      console.log('Profile update failed', String(err));
+      logger.error('Profile update failed', { error: String(err) });
       setError(err instanceof Error ? err.message : 'Update failed');
     } finally {
       setSubmitting(false);

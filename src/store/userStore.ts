@@ -4,6 +4,7 @@ import { createLogger } from '../logging/logger';
 
 const logger = createLogger('userStore');
 
+// TODO(TEAM-API): Remove UserV1 from store once v1 API is fully deprecated
 export interface UserState {
   user: UserV1 | User | null;
   isAuthenticated: boolean;
@@ -26,7 +27,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<UserState>(initialState);
 
   const setUser = useCallback((user: UserV1 | User) => {
-    console.log('Setting user in store', user.id);
     logger.info('Setting user in store', { userId: user.id });
 
     setState({
@@ -36,7 +36,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const clearUser = useCallback(() => {
-    console.log('Clearing user from store');
     logger.info('Clearing user from store');
     setState(initialState);
   }, []);
@@ -54,6 +53,10 @@ export function useUserStore(): UserContextValue {
     throw new Error('useUserStore must be used within a UserProvider');
   }
   return context;
+}
+
+export function isUserV1(user: UserV1 | User): user is UserV1 {
+  return 'legacyId' in user;
 }
 
 export function getUserDisplayName(user: UserV1 | User): string {

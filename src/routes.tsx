@@ -8,6 +8,7 @@ import {
   UserProfilePage,
 } from './pages';
 
+// TODO(TEAM-FRONTEND): Remove legacy-profile route once v1 auth is deprecated
 export function Routes() {
   return (
     <RouterRoutes>
@@ -19,6 +20,7 @@ export function Routes() {
       <Route path="/orders" element={<OrderHistoryPage />} />
       <Route path="/orders/:orderId" element={<OrderHistoryPage />} />
       <Route path="/profile" element={<UserProfilePage />} />
+      <Route path="/legacy-profile" element={<UserProfilePage />} />
 
       {/* Fallback route */}
       <Route path="*" element={<HomePage />} />

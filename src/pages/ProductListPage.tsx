@@ -1,13 +1,18 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ProductList } from '../components/products/ProductList';
+import { createLogger } from '../logging/logger';
+
+const logger = createLogger('ProductListPage');
 
 export function ProductListPage() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category') || undefined;
   const search = searchParams.get('search') || undefined;
 
+  // TODO(TEAM-FRONTEND): Replace console.log with logger.info
   console.log('ProductListPage mounted');
+  logger.info('ProductListPage rendered', { category, search });
 
   useEffect(() => {
     document.title = category ? `${category} - AcmeShop` : 'Products - AcmeShop';

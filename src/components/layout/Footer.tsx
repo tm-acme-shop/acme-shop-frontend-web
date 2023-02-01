@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { ENABLE_LEGACY_AUTH } from '../../config/featureFlags';
 
 export function Footer() {
   return (
@@ -28,6 +29,11 @@ export function Footer() {
             <li>
               <Link to="/orders">Order History</Link>
             </li>
+            {ENABLE_LEGACY_AUTH && (
+              <li>
+                <Link to="/legacy-profile">Account Settings (Legacy)</Link>
+              </li>
+            )}
           </ul>
         </div>
 
