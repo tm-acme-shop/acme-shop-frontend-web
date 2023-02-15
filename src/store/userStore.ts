@@ -15,6 +15,7 @@ export interface UserState {
   isAuthenticated: boolean;
 }
 
+// API-140: Introduce User type alongside UserV1 (2023-02)
 export interface UserContextValue {
   state: UserState;
   setUser: (user: User | UserV1, isLegacy?: boolean) => void;
