@@ -5,6 +5,7 @@ import { UserProfileForm } from '../components/profile/UserProfileForm';
 import { logger } from '../logging/logger';
 import { toUserV1 } from '@acme-shop/shared-ts';
 
+// FE-150: Profile page migrated to User type (2023-09)
 export function UserProfilePage() {
   const { user, loading, error } = useUser();
   const isLegacyAuth = useLegacyAuth();
