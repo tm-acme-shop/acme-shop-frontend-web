@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getProducts, getProduct, getFeaturedProducts, searchProducts } from '../services/productService';
+import { logger } from '../logging/logger';
 import { Product } from '../types';
 
 export interface UseProductsResult {
@@ -15,6 +16,9 @@ export interface UseProductResult {
   error: Error | null;
 }
 
+/**
+ * Hook to fetch products.
+ */
 export function useProducts(options?: {
   category?: string;
   search?: string;
@@ -28,11 +32,11 @@ export function useProducts(options?: {
     setError(null);
 
     try {
-      console.log('Fetching products', options);
+      logger.info('Fetching products', { options });
       const data = await getProducts(options);
       setProducts(data);
     } catch (err) {
-      console.log('Failed to load products', String(err));
+      logger.error('Failed to load products', { error: String(err) });
       setError(err instanceof Error ? err : new Error('Failed to load products'));
     } finally {
       setLoading(false);
@@ -51,6 +55,9 @@ export function useProducts(options?: {
   };
 }
 
+/**
+ * Hook to fetch a single product by ID.
+ */
 export function useProduct(productId: string): UseProductResult {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,7 +77,7 @@ export function useProduct(productId: string): UseProductResult {
         setProduct(data);
       })
       .catch((err) => {
-        console.log('Failed to load product', productId, String(err));
+        logger.error('Failed to load product', { productId, error: String(err) });
         setError(err instanceof Error ? err : new Error('Failed to load product'));
       })
       .finally(() => {
@@ -81,6 +88,9 @@ export function useProduct(productId: string): UseProductResult {
   return { product, loading, error };
 }
 
+/**
+ * Hook to fetch featured products.
+ */
 export function useFeaturedProducts(): UseProductsResult {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,7 +104,7 @@ export function useFeaturedProducts(): UseProductsResult {
       const data = await getFeaturedProducts();
       setProducts(data);
     } catch (err) {
-      console.log('Failed to load featured products', String(err));
+      logger.error('Failed to load featured products', { error: String(err) });
       setError(err instanceof Error ? err : new Error('Failed to load featured products'));
     } finally {
       setLoading(false);
@@ -113,6 +123,9 @@ export function useFeaturedProducts(): UseProductsResult {
   };
 }
 
+/**
+ * Hook for product search with debounce.
+ */
 export function useProductSearch(query: string): UseProductsResult {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
@@ -131,7 +144,7 @@ export function useProductSearch(query: string): UseProductsResult {
       const data = await searchProducts(query);
       setProducts(data);
     } catch (err) {
-      console.log('Product search failed', query, String(err));
+      logger.error('Product search failed', { query, error: String(err) });
       setError(err instanceof Error ? err : new Error('Search failed'));
     } finally {
       setLoading(false);

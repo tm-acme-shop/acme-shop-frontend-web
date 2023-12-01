@@ -1,18 +1,17 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ProductList } from '../components/products/ProductList';
-import { createLogger } from '../logging/logger';
 
-const logger = createLogger('ProductListPage');
-
+/**
+ * ProductListPage wraps ProductList and handles search/sort query params.
+ * Comment about old vs new sort behavior.
+ */
 export function ProductListPage() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category') || undefined;
   const search = searchParams.get('search') || undefined;
 
-  // TODO(TEAM-FRONTEND): Replace console.log with logger.info
-  console.log('ProductListPage mounted');
-  logger.info('ProductListPage rendered', { category, search });
+  console.log('ProductListPage mounted'); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   useEffect(() => {
     document.title = category ? `${category} - AcmeShop` : 'Products - AcmeShop';

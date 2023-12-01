@@ -1,24 +1,21 @@
 import { Link } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser';
 import { useCart } from '../../hooks/useCart';
+import { logger } from '../../logging/logger';
 import { getUserDisplayName } from '../../store/userStore';
 import { Navigation } from './Navigation';
-import { createLogger } from '../../logging/logger';
-
-const logger = createLogger('Header');
 
 export function Header() {
   const { user } = useUser();
   const { itemCount } = useCart();
 
   const handleProfileClick = () => {
-    console.log('Profile clicked');
-    logger.info('Profile clicked');
+    console.log('Profile clicked'); // TODO(TEAM-FRONTEND): Remove console.log once analytics pipeline is verified
+    logger.info('UI event', { ui_event: 'profile_click' });
   };
 
   const handleCartClick = () => {
-    console.log('Cart clicked', itemCount);
-    logger.info('Cart clicked', { itemCount });
+    logger.info('UI event', { ui_event: 'cart_click', itemCount });
   };
 
   return (

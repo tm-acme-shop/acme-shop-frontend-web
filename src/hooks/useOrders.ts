@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Order } from '@acme-shop/shared-ts';
 import { getOrders, getOrder, cancelOrder } from '../services/orderService';
-import { getLegacyUserId } from '../utils/auth';
+import { logger } from '../logging/logger';
+import { getUserId } from '../utils/auth';
 
 export interface UseOrdersResult {
   orders: Order[];
@@ -18,13 +19,17 @@ export interface UseOrderResult {
   refetch: () => Promise<void>;
 }
 
+/**
+ * Hook to fetch and cache user orders.
+ * Uses orderService which still has one legacy endpoint for export.
+ */
 export function useOrders(): UseOrdersResult {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchOrders = useCallback(async () => {
-    const userId = getLegacyUserId();
+    const userId = getUserId();
     if (!userId) {
       setLoading(false);
       return;
@@ -34,12 +39,12 @@ export function useOrders(): UseOrdersResult {
     setError(null);
 
     try {
-      console.log('Fetching orders', userId);
+      logger.info('Fetching orders', { userId });
       const ordersData = await getOrders(userId);
       setOrders(ordersData);
-      console.log('Orders loaded', ordersData.length);
+      logger.info('Orders loaded', { count: ordersData.length });
     } catch (err) {
-      console.log('Failed to load orders', String(err));
+      logger.error('Failed to load orders', { error: String(err) });
       setError(err instanceof Error ? err : new Error('Failed to load orders'));
     } finally {
       setLoading(false);
@@ -48,14 +53,14 @@ export function useOrders(): UseOrdersResult {
 
   const handleCancel = useCallback(async (orderId: string) => {
     try {
-      console.log('Cancelling order', orderId);
+      logger.info('Cancelling order', { orderId });
       const updatedOrder = await cancelOrder(orderId);
       setOrders((prev) =>
         prev.map((order) => (order.id === orderId ? updatedOrder : order))
       );
-      console.log('Order cancelled', orderId);
+      logger.info('Order cancelled', { orderId });
     } catch (err) {
-      console.log('Failed to cancel order', orderId, String(err));
+      logger.error('Failed to cancel order', { orderId, error: String(err) });
       throw err;
     }
   }, []);
@@ -73,6 +78,9 @@ export function useOrders(): UseOrdersResult {
   };
 }
 
+/**
+ * Hook to fetch a single order by ID.
+ */
 export function useOrder(orderId: string): UseOrderResult {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -88,11 +96,11 @@ export function useOrder(orderId: string): UseOrderResult {
     setError(null);
 
     try {
-      console.log('Fetching order', orderId);
+      logger.info('Fetching order', { orderId });
       const orderData = await getOrder(orderId);
       setOrder(orderData);
     } catch (err) {
-      console.log('Failed to load order', orderId, String(err));
+      logger.error('Failed to load order', { orderId, error: String(err) });
       setError(err instanceof Error ? err : new Error('Failed to load order'));
     } finally {
       setLoading(false);

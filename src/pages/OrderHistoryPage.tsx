@@ -1,13 +1,16 @@
 import { useEffect } from 'react';
 import { OrderHistoryTable } from '../components/orders/OrderHistoryTable';
-import { createLogger } from '../logging/logger';
+import { logger } from '../logging/logger';
 
-const logger = createLogger('OrderHistoryPage');
-
-// TODO(TEAM-API): Migrate to v2 order history endpoint
+/**
+ * OrderHistoryPage wraps OrderHistoryTable.
+ * Calls useOrders, which hits orderService with a mix of legacy/modern requests.
+ *
+ * TODO(TEAM-API): Align orders API with new pagination scheme
+ */
 export function OrderHistoryPage() {
   useEffect(() => {
-    logger.info('Page view: order_history');
+    logger.info('Page view', { page: 'order_history' });
   }, []);
 
   return (

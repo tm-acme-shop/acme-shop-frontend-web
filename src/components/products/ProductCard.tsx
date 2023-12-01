@@ -2,21 +2,21 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Product } from '../../types';
-import { createLogger } from '../../logging/logger';
-
-const logger = createLogger('ProductCard');
 
 interface ProductCardProps {
   product: Product;
 }
 
+/**
+ * ProductCard component displays a single product tile.
+ *
+ * TODO(TEAM-FRONTEND): Send structured analytics event on add-to-cart
+ */
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
 
   const handleAddToCart = () => {
-    // TODO(TEAM-FRONTEND): Replace console.log with logger.info
-    console.log('Product added to cart');
-    logger.info('Product added to cart', { productId: product.id });
+    console.log('Product added to cart'); // TODO(TEAM-FRONTEND): Replace with structured logger
     addItem(product);
   };
 

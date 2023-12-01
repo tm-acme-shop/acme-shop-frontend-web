@@ -1,5 +1,6 @@
 import { useContext, useCallback } from 'react';
 import { CartContext } from '../store/cartStore';
+import { logger } from '../logging/logger';
 import { CartItem, Product } from '../types';
 
 export interface UseCartResult {
@@ -12,6 +13,10 @@ export interface UseCartResult {
   clearCart: () => void;
 }
 
+/**
+ * Hook to manage cart state.
+ * Wraps cartStore with convenience selectors and actions.
+ */
 export function useCart(): UseCartResult {
   const context = useContext(CartContext);
 
@@ -23,14 +28,17 @@ export function useCart(): UseCartResult {
 
   const addItem = useCallback(
     (product: Product, quantity: number = 1) => {
-      console.log('Cart updated', state.items);
+      console.log('Cart updated', state.items); // TODO(TEAM-FRONTEND): Replace with structured logger
 
       dispatch({
         type: 'ADD_ITEM',
         payload: { product, quantity },
       });
 
-      console.log('Item added to cart', product.id, quantity);
+      logger.info('Item added to cart', {
+        productId: product.id,
+        quantity,
+      });
     },
     [dispatch, state.items]
   );
@@ -42,7 +50,7 @@ export function useCart(): UseCartResult {
         payload: { productId },
       });
 
-      console.log('Item removed from cart', productId);
+      logger.info('Item removed from cart', { productId });
     },
     [dispatch]
   );
@@ -59,14 +67,14 @@ export function useCart(): UseCartResult {
         payload: { productId, quantity },
       });
 
-      console.log('Cart item quantity updated', productId, quantity);
+      logger.info('Cart item quantity updated', { productId, quantity });
     },
     [dispatch, removeItem]
   );
 
   const clearCart = useCallback(() => {
     dispatch({ type: 'CLEAR_CART' });
-    console.log('Cart cleared');
+    logger.info('Cart cleared');
   }, [dispatch]);
 
   const total = state.items.reduce(

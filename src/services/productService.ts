@@ -1,10 +1,14 @@
 import { modernRequest } from './httpClient';
 import { API_BASE_URL_V2 } from '../config/apiConfig';
+import { logger } from '../logging/logger';
 import { Product, ProductListResponse } from '../types';
-import { createLogger } from '../logging/logger';
 
-const logger = createLogger('productService');
-
+/**
+ * Get all products.
+ * This service has already migrated off v1 APIs and legacy headers.
+ *
+ * TODO(TEAM-FRONTEND): Add structured logging for product impressions
+ */
 export async function getProducts(options?: {
   category?: string;
   search?: string;
@@ -23,10 +27,12 @@ export async function getProducts(options?: {
   const url = `${API_BASE_URL_V2}/products${queryString ? `?${queryString}` : ''}`;
 
   const response = await modernRequest<ProductListResponse>('GET', url);
-  logger.info('Products fetched', { count: response.data.products.length });
   return response.data.products;
 }
 
+/**
+ * Get a single product by ID.
+ */
 export async function getProduct(productId: string): Promise<Product> {
   logger.info('Fetching product', { productId });
 
@@ -37,6 +43,9 @@ export async function getProduct(productId: string): Promise<Product> {
   return response.data;
 }
 
+/**
+ * Get featured products for homepage.
+ */
 export async function getFeaturedProducts(): Promise<Product[]> {
   logger.info('Fetching featured products');
 
@@ -47,6 +56,9 @@ export async function getFeaturedProducts(): Promise<Product[]> {
   return response.data.products;
 }
 
+/**
+ * Search products by query.
+ */
 export async function searchProducts(query: string): Promise<Product[]> {
   logger.info('Searching products', { query });
 

@@ -1,4 +1,5 @@
 import { createContext, useReducer, ReactNode, Dispatch } from 'react';
+import { logger } from '../logging/logger';
 import { CartItem, Product } from '../types';
 
 export interface CartState {
@@ -28,7 +29,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         (item) => item.productId === product.id
       );
 
-      console.log('Cart add item', product.id, quantity);
+      logger.info('Cart add item', { productId: product.id, quantity });
 
       if (existingIndex >= 0) {
         const items = [...state.items];
@@ -55,7 +56,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
 
     case 'REMOVE_ITEM': {
-      console.log('Cart remove item', action.payload.productId);
+      logger.info('Cart remove item', { productId: action.payload.productId });
       return {
         ...state,
         items: state.items.filter(
@@ -66,7 +67,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 
     case 'UPDATE_QUANTITY': {
       const { productId, quantity } = action.payload;
-      console.log('Cart update quantity', productId, quantity);
+      logger.info('Cart update quantity', { productId, quantity });
 
       return {
         ...state,
@@ -77,7 +78,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
 
     case 'CLEAR_CART': {
-      console.log('Cart cleared');
+      logger.info('Cart cleared');
       return initialState;
     }
 

@@ -1,15 +1,14 @@
-import { generateRequestId, generateUUID } from '../utils/requestId';
-import { getLegacyUserId, getUserId } from '../utils/auth';
-import { API_TIMEOUT_MS } from '../config/apiConfig';
+import { logger } from '../logging/logger';
+import { legacyLog } from '../logging/legacyLogger';
+import { generateRequestId } from '../utils/requestId';
+import { getUserId, getLegacyUserId } from '../utils/auth';
 import { ENABLE_V1_API } from '../config/featureFlags';
-import { createLogger } from '../logging/logger';
+import { API_TIMEOUT_MS } from '../config/apiConfig';
 import {
   X_ACME_REQUEST_ID,
-  X_LEGACY_USER_ID,
   X_USER_ID,
+  X_LEGACY_USER_ID,
 } from '@acme-shop/shared-ts';
-
-const logger = createLogger('httpClient');
 
 export interface RequestConfig {
   headers?: Record<string, string>;
@@ -24,8 +23,10 @@ export interface HttpResponse<T> {
 }
 
 /**
- * @deprecated Use modernRequest() instead
- * TODO(TEAM-SEC): Remove legacyRequest once v1 API is deprecated
+ * Make an HTTP request using the legacy header format.
+ * @deprecated Use modernRequest instead with X-User-Id header.
+ *
+ * TODO(TEAM-SEC): Ensure request IDs are cryptographically secure
  */
 export async function legacyRequest<T>(
   method: string,
@@ -33,10 +34,10 @@ export async function legacyRequest<T>(
   body?: unknown,
   config?: RequestConfig
 ): Promise<HttpResponse<T>> {
-  const requestId = generateUUID();
+  const requestId = generateRequestId();
   const legacyUserId = getLegacyUserId();
 
-  console.log('Making legacy request', url);
+  console.log('Making legacy request', url); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -45,7 +46,7 @@ export async function legacyRequest<T>(
     ...config?.headers,
   };
 
-  console.log(`HTTP ${method} ${url}`);
+  legacyLog(`HTTP ${method} ${url}`);
 
   const controller = new AbortController();
   const timeout = config?.timeout || API_TIMEOUT_MS;
@@ -74,11 +75,14 @@ export async function legacyRequest<T>(
     };
   } catch (error) {
     clearTimeout(timeoutId);
-    console.log(`Request failed: ${String(error)}`);
+    legacyLog(`Request failed: ${String(error)}`);
     throw error;
   }
 }
 
+/**
+ * Make an HTTP request using the modern header format.
+ */
 export async function modernRequest<T>(
   method: string,
   url: string,
@@ -88,8 +92,6 @@ export async function modernRequest<T>(
   const requestId = generateRequestId();
   const userId = getUserId();
 
-  logger.info('Making modern request', { url, method });
-
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     [X_ACME_REQUEST_ID]: requestId,
@@ -97,7 +99,11 @@ export async function modernRequest<T>(
     ...config?.headers,
   };
 
-  logger.debug('Request headers prepared', { requestId });
+  logger.info('HTTP request', {
+    method,
+    url,
+    requestId,
+  });
 
   const controller = new AbortController();
   const timeout = config?.timeout || API_TIMEOUT_MS;
@@ -114,13 +120,17 @@ export async function modernRequest<T>(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      logger.error('Request failed with status', { status: response.status, url });
+      logger.error('HTTP error', { method, url, status: response.status });
       throw new Error(`HTTP error: ${response.status}`);
     }
 
     const data = response.status === 204 ? (undefined as T) : await response.json();
 
-    logger.info('Request completed', { status: response.status, url });
+    logger.debug('HTTP response', {
+      method,
+      url,
+      status: response.status,
+    });
 
     return {
       data,
@@ -129,11 +139,14 @@ export async function modernRequest<T>(
     };
   } catch (error) {
     clearTimeout(timeoutId);
-    logger.error('Request failed', { error: String(error), url });
+    logger.error('Request failed', { method, url, error: String(error) });
     throw error;
   }
 }
 
+/**
+ * Make an HTTP request, choosing between legacy and modern headers based on feature flag.
+ */
 export async function request<T>(
   method: string,
   url: string,

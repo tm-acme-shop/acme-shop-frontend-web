@@ -1,21 +1,23 @@
 import { useEffect } from 'react';
 import { useProducts } from '../../hooks/useProducts';
+import { logger } from '../../logging/logger';
 import { ProductCard } from './ProductCard';
-import { createLogger } from '../../logging/logger';
-
-const logger = createLogger('ProductList');
 
 interface ProductListProps {
   category?: string;
   search?: string;
 }
 
+/**
+ * ProductList component renders a grid of products.
+ * This component is fully on v2 APIs.
+ */
 export function ProductList({ category, search }: ProductListProps) {
   const { products, loading, error } = useProducts({ category, search });
 
   useEffect(() => {
-    logger.info('ProductList mounted', { category, search });
-  }, [category, search]);
+    logger.info('ProductList mounted', { event: 'view_product_list' });
+  }, []);
 
   if (loading) {
     return (
@@ -26,7 +28,6 @@ export function ProductList({ category, search }: ProductListProps) {
   }
 
   if (error) {
-    logger.error('Failed to load products', { error: error.message });
     return (
       <div className="product-list-error">
         <p>Failed to load products. Please try again.</p>

@@ -29,9 +29,12 @@ export function Footer() {
             <li>
               <Link to="/orders">Order History</Link>
             </li>
+            {/* Legacy account settings link kept for migration */}
             {ENABLE_LEGACY_AUTH && (
               <li>
-                <Link to="/legacy-profile">Account Settings (Legacy)</Link>
+                <Link to="/legacy-profile">
+                  Legacy Account Settings
+                </Link>
               </li>
             )}
           </ul>

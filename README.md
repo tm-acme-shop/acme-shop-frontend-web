@@ -63,6 +63,7 @@ src/
 │   └── profile/        # User profile components
 ├── config/             # Configuration and feature flags
 ├── hooks/              # Custom React hooks
+├── logging/            # Logging utilities
 ├── pages/              # Page components
 ├── services/           # API services
 ├── store/              # State management
@@ -70,9 +71,33 @@ src/
 └── utils/              # Utility functions
 ```
 
-## API
+## Demo Patterns
 
-The application connects to the v1 API at `/api/v1/`.
+This codebase contains patterns for Sourcegraph demos:
+
+### API Migration (v1 → v2)
+- `getUserV1()` vs `getUser()` in services
+- `/api/v1/` vs `/api/v2/` endpoints
+- `UserV1` vs `User` types from shared-ts
+
+### Logging Migration
+- Legacy: `console.log()`, `legacyLog()`
+- Modern: `logger.info({ ... })` with structured data
+
+### Header Migration
+- Legacy: `X-Legacy-User-Id` header
+- Modern: `X-User-Id` header
+
+### Feature Flags
+- `ENABLE_LEGACY_AUTH`
+- `ENABLE_V1_API`
+- `ENABLE_LEGACY_PAYMENTS`
+
+### TODO Comments
+Search for team-tagged TODOs:
+- `TODO(TEAM-FRONTEND)` - Frontend team tasks
+- `TODO(TEAM-API)` - API team tasks
+- `TODO(TEAM-SEC)` - Security team tasks
 
 ## Dependencies
 
@@ -80,6 +105,15 @@ The application connects to the v1 API at `/api/v1/`.
 - **react** - UI framework
 - **react-router-dom** - Client-side routing
 - **vite** - Build tool and dev server
+
+## Environment Variables
+
+```bash
+VITE_API_BASE_URL=http://localhost:8080
+VITE_ENABLE_LEGACY_AUTH=false
+VITE_ENABLE_V1_API=false
+VITE_ENABLE_LEGACY_PAYMENTS=false
+```
 
 ## License
 

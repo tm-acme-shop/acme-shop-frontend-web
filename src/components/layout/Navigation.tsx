@@ -1,12 +1,11 @@
 import { NavLink } from 'react-router-dom';
 import { ENABLE_LEGACY_AUTH } from '../../config/featureFlags';
-import { createLogger } from '../../logging/logger';
-
-const logger = createLogger('Navigation');
+import { logger } from '../../logging/logger';
 
 interface NavItem {
   to: string;
   label: string;
+  legacy?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -17,20 +16,22 @@ const navItems: NavItem[] = [
 ];
 
 const legacyNavItems: NavItem[] = [
-  { to: '/legacy-profile', label: 'Legacy Profile' },
+  { to: '/legacy-profile', label: 'Legacy Profile', legacy: true },
 ];
 
 export function Navigation() {
   const handleNavClick = (item: NavItem) => {
-    logger.info('Navigation click', { path: item.to });
+    logger.info('Navigation click', { path: item.to, legacy: item.legacy });
   };
 
-  const allNavItems = ENABLE_LEGACY_AUTH ? [...navItems, ...legacyNavItems] : navItems;
+  const allItems = ENABLE_LEGACY_AUTH
+    ? [...navItems, ...legacyNavItems]
+    : navItems;
 
   return (
     <nav className="main-nav">
       <ul>
-        {allNavItems.map((item) => (
+        {allItems.map((item) => (
           <li key={item.to}>
             <NavLink
               to={item.to}
@@ -40,6 +41,7 @@ export function Navigation() {
               }
             >
               {item.label}
+              {item.legacy && <span className="legacy-badge">Legacy</span>}
             </NavLink>
           </li>
         ))}

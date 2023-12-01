@@ -1,23 +1,28 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
-import { UserV1, User } from '@acme-shop/shared-ts';
-import { createLogger } from '../logging/logger';
+import { User, UserV1 } from '@acme-shop/shared-ts';
+import { logger } from '../logging/logger';
 
-const logger = createLogger('userStore');
-
-// TODO(TEAM-API): Remove UserV1 from store once v1 API is fully deprecated
+/**
+ * UserState uses union type User | UserV1 to show type-level legacy vs new.
+ * NOTE: UserV1 kept for backwards compatibility with legacy profile page.
+ *
+ * TODO(TEAM-API): Remove UserV1 from store once profile page is fully migrated
+ */
 export interface UserState {
-  user: UserV1 | User | null;
+  user: User | UserV1 | null;
+  isLegacy: boolean;
   isAuthenticated: boolean;
 }
 
 export interface UserContextValue {
   state: UserState;
-  setUser: (user: UserV1 | User) => void;
+  setUser: (user: User | UserV1, isLegacy?: boolean) => void;
   clearUser: () => void;
 }
 
 const initialState: UserState = {
   user: null,
+  isLegacy: false,
   isAuthenticated: false,
 };
 
@@ -26,11 +31,15 @@ export const UserContext = createContext<UserContextValue | null>(null);
 export function UserProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<UserState>(initialState);
 
-  const setUser = useCallback((user: UserV1 | User) => {
-    logger.info('Setting user in store', { userId: user.id });
+  const setUser = useCallback((user: User | UserV1, isLegacy: boolean = false) => {
+    logger.info('Setting user in store', {
+      userId: user.id,
+      isLegacy,
+    });
 
     setState({
       user,
+      isLegacy,
       isAuthenticated: true,
     });
   }, []);
@@ -55,10 +64,19 @@ export function useUserStore(): UserContextValue {
   return context;
 }
 
-export function isUserV1(user: UserV1 | User): user is UserV1 {
-  return 'legacyId' in user;
+/**
+ * Type guard to check if user is legacy UserV1.
+ */
+export function isUserV1(user: User | UserV1): user is UserV1 {
+  return 'name' in user && !('firstName' in user);
 }
 
-export function getUserDisplayName(user: UserV1 | User): string {
-  return user.name;
+/**
+ * Get user display name, handling both User and UserV1.
+ */
+export function getUserDisplayName(user: User | UserV1): string {
+  if (isUserV1(user)) {
+    return user.name;
+  }
+  return `${user.firstName} ${user.lastName}`;
 }

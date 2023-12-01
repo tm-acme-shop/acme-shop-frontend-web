@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { logger } from '../../logging/logger';
 import { CartItem } from './CartItem';
 
 export function CartSummary() {
   const { items, total, itemCount } = useCart();
 
   const handleCheckout = () => {
-    console.log('Checkout initiated', itemCount, total);
+    logger.info('Checkout initiated', { itemCount, total });
   };
 
   if (items.length === 0) {

@@ -1,22 +1,30 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { UserV1, User } from '@acme-shop/shared-ts';
-import { createLogger } from '../../logging/logger';
+import { User, UserV1, getFullName } from '@acme-shop/shared-ts';
+import { updateUserProfile } from '../../services/userService';
+import { logger } from '../../logging/logger';
+import { isUserV1 } from '../../store/userStore';
 
-const logger = createLogger('UserProfileForm');
-
-// TODO(TEAM-FRONTEND): Remove support for UserV1 once v1 API is deprecated
 interface UserProfileFormProps {
-  user: UserV1 | User;
+  user: User | UserV1;
+  isLegacy?: boolean;
 }
 
 interface FormData {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
 }
 
-export function UserProfileForm({ user }: UserProfileFormProps) {
+/**
+ * UserProfileForm handles user profile editing.
+ * Accepts either User or UserV1 props, with internal mapping from legacy fields.
+ *
+ * TODO(TEAM-FRONTEND): Remove support for UserV1 once migration is complete
+ */
+export function UserProfileForm({ user, isLegacy = false }: UserProfileFormProps) {
   const [formData, setFormData] = useState<FormData>({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
   });
   const [submitting, setSubmitting] = useState(false);
@@ -24,10 +32,20 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setFormData({
-      name: user.name,
-      email: user.email,
-    });
+    if (isUserV1(user)) {
+      const nameParts = user.name.split(' ');
+      setFormData({
+        firstName: nameParts[0] || '',
+        lastName: nameParts.slice(1).join(' ') || '',
+        email: user.email,
+      });
+    } else {
+      setFormData({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      });
+    }
   }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,10 +61,17 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
     setError(null);
     setSuccess(false);
 
-    logger.info('Profile update submitted', { userId: user.id });
+    logger.info('Profile update submitted', {
+      userId: user.id,
+      isLegacy,
+    });
 
     try {
-      logger.info('Profile update - v1 API not supported for updates');
+      await updateUserProfile(user.id, {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+      });
+
       setSuccess(true);
       logger.info('Profile updated successfully', { userId: user.id });
     } catch (err) {
@@ -61,6 +86,12 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
     <form className="profile-form" onSubmit={handleSubmit}>
       <h2>Edit Profile</h2>
 
+      {isLegacy && (
+        <div className="legacy-notice">
+          You are using a legacy profile format. Some features may be limited.
+        </div>
+      )}
+
       {success && (
         <div className="success-message">Profile updated successfully!</div>
       )}
@@ -68,12 +99,24 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
       {error && <div className="error-message">{error}</div>}
 
       <div className="form-group">
-        <label htmlFor="name">Name</label>
+        <label htmlFor="firstName">First Name</label>
         <input
           type="text"
-          id="name"
-          name="name"
-          value={formData.name}
+          id="firstName"
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="lastName">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          name="lastName"
+          value={formData.lastName}
           onChange={handleChange}
           required
         />

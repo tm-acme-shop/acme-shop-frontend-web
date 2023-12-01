@@ -2,13 +2,10 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useFeaturedProducts } from '../hooks/useProducts';
 import { ProductCard } from '../components/products/ProductCard';
-import { createLogger } from '../logging/logger';
-
-const logger = createLogger('HomePage');
+import { logger } from '../logging/logger';
 
 export function HomePage() {
   useEffect(() => {
-    console.log('Page view: home');
     logger.info('Page view', { page: 'home' });
   }, []);
 

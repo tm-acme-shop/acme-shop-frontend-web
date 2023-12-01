@@ -1,4 +1,5 @@
 import { Routes as RouterRoutes, Route } from 'react-router-dom';
+import { ENABLE_LEGACY_AUTH } from './config/featureFlags';
 import {
   HomePage,
   ProductListPage,
@@ -8,7 +9,11 @@ import {
   UserProfilePage,
 } from './pages';
 
-// TODO(TEAM-FRONTEND): Remove legacy-profile route once v1 auth is deprecated
+/**
+ * Application routes.
+ *
+ * TODO(TEAM-FRONTEND): Remove /legacy-profile route once all users migrated
+ */
 export function Routes() {
   return (
     <RouterRoutes>
@@ -20,7 +25,11 @@ export function Routes() {
       <Route path="/orders" element={<OrderHistoryPage />} />
       <Route path="/orders/:orderId" element={<OrderHistoryPage />} />
       <Route path="/profile" element={<UserProfilePage />} />
-      <Route path="/legacy-profile" element={<UserProfilePage />} />
+
+      {/* Legacy profile route kept for migration */}
+      {ENABLE_LEGACY_AUTH && (
+        <Route path="/legacy-profile" element={<UserProfilePage />} />
+      )}
 
       {/* Fallback route */}
       <Route path="*" element={<HomePage />} />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
 import { useUser } from '../../hooks/useUser';
 import { processPayment } from '../../services/paymentService';
+import { logger } from '../../logging/logger';
 import { formatCurrency } from '../../utils/formatCurrency';
 
 interface FormData {
@@ -16,6 +17,11 @@ interface FormData {
   billingZip: string;
 }
 
+/**
+ * CheckoutForm handles payment and address entry.
+ *
+ * TODO(TEAM-SEC): Add client-side validation to prevent invalid card data
+ */
 export function CheckoutForm() {
   const navigate = useNavigate();
   const { items, total, clearCart } = useCart();
@@ -44,7 +50,10 @@ export function CheckoutForm() {
     setSubmitting(true);
     setError(null);
 
-    console.log('Checkout submit', items.length);
+    logger.info('Checkout submit', {
+      event: 'checkout_submit',
+      cartSize: items.length,
+    });
 
     try {
       if (!user) {
@@ -65,7 +74,7 @@ export function CheckoutForm() {
         throw new Error('Payment failed');
       }
     } catch (err) {
-      console.log('Checkout failed', String(err));
+      logger.error('Checkout failed', { error: String(err) });
       setError(err instanceof Error ? err.message : 'Payment failed');
     } finally {
       setSubmitting(false);

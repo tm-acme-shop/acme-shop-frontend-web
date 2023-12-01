@@ -1,3 +1,4 @@
+# TODO(TEAM-API): Migrate to latest GitHub Actions and Node LTS
 name: CI
 
 on:
@@ -6,16 +7,15 @@ on:
   pull_request:
     branches: [main]
 
-# TODO(TEAM-API): Add API integration tests to CI pipeline
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: '18'
 

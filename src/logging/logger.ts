@@ -1,59 +1,49 @@
+import { ENABLE_DEBUG_LOGGING } from '../config/featureFlags';
+
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 export interface LogPayload {
-  level: LogLevel;
-  message: string;
-  timestamp: string;
-  context?: Record<string, unknown>;
-}
-
-export function formatLogEntry(payload: LogPayload): string {
-  const contextStr = payload.context
-    ? ` ${JSON.stringify(payload.context)}`
-    : '';
-  return `[${payload.timestamp}] ${payload.level.toUpperCase()}: ${payload.message}${contextStr}`;
+  [key: string]: unknown;
 }
 
 export interface Logger {
-  debug: (message: string, context?: Record<string, unknown>) => void;
-  info: (message: string, context?: Record<string, unknown>) => void;
-  warn: (message: string, context?: Record<string, unknown>) => void;
-  error: (message: string, context?: Record<string, unknown>) => void;
+  debug(message: string, payload?: LogPayload): void;
+  info(message: string, payload?: LogPayload): void;
+  warn(message: string, payload?: LogPayload): void;
+  error(message: string, payload?: LogPayload): void;
 }
 
-export function createLogger(name: string): Logger {
-  const log = (level: LogLevel, message: string, context?: Record<string, unknown>) => {
-    const payload: LogPayload = {
-      level,
-      message,
-      timestamp: new Date().toISOString(),
-      context: { ...context, logger: name },
-    };
-
-    const formatted = formatLogEntry(payload);
-
-    switch (level) {
-      case 'debug':
-        console.debug(formatted);
-        break;
-      case 'info':
-        console.info(formatted);
-        break;
-      case 'warn':
-        console.warn(formatted);
-        break;
-      case 'error':
-        console.error(formatted);
-        break;
-    }
+function formatLogEntry(level: LogLevel, message: string, payload?: LogPayload): string {
+  const timestamp = new Date().toISOString();
+  const entry = {
+    timestamp,
+    level,
+    message,
+    ...payload,
   };
+  return JSON.stringify(entry);
+}
 
+function createLogger(): Logger {
   return {
-    debug: (message, context) => log('debug', message, context),
-    info: (message, context) => log('info', message, context),
-    warn: (message, context) => log('warn', message, context),
-    error: (message, context) => log('error', message, context),
+    debug(message: string, payload?: LogPayload): void {
+      if (ENABLE_DEBUG_LOGGING) {
+        console.debug(formatLogEntry('debug', message, payload));
+      }
+    },
+
+    info(message: string, payload?: LogPayload): void {
+      console.info(formatLogEntry('info', message, payload));
+    },
+
+    warn(message: string, payload?: LogPayload): void {
+      console.warn(formatLogEntry('warn', message, payload));
+    },
+
+    error(message: string, payload?: LogPayload): void {
+      console.error(formatLogEntry('error', message, payload));
+    },
   };
 }
 
-export const logger = createLogger('app');
+export const logger = createLogger();

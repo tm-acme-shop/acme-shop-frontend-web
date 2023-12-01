@@ -1,16 +1,37 @@
 import { Link } from 'react-router-dom';
 import { Order, formatMoney, canCancel } from '@acme-shop/shared-ts';
 import { useOrders } from '../../hooks/useOrders';
+import { exportOrdersCsv } from '../../services/orderService';
+import { logger } from '../../logging/logger';
 
+/**
+ * OrderHistoryTable displays a table of user orders.
+ * Note: CSV export still uses v1 API with legacy headers.
+ */
 export function OrderHistoryTable() {
   const { orders, loading, error, cancel } = useOrders();
 
+  const handleExportCsv = async () => {
+    logger.info('Exporting orders to CSV');
+    try {
+      const blob = await exportOrdersCsv('current-user');
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'orders.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      logger.error('Failed to export orders', { error: String(err) });
+    }
+  };
+
   const handleCancel = async (orderId: string) => {
-    console.log('Cancelling order from table', orderId);
+    logger.info('Cancelling order from table', { orderId });
     try {
       await cancel(orderId);
     } catch (err) {
-      console.log('Failed to cancel order', orderId, String(err));
+      logger.error('Failed to cancel order', { orderId, error: String(err) });
     }
   };
 
@@ -35,6 +56,9 @@ export function OrderHistoryTable() {
     <div className="order-history">
       <div className="order-history-header">
         <h2>Order History</h2>
+        <button onClick={handleExportCsv} className="export-btn">
+          Export to CSV
+        </button>
       </div>
 
       <table className="orders-table">
