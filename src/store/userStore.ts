@@ -66,6 +66,7 @@ export function useUserStore(): UserContextValue {
   return context;
 }
 
+// FE-175: DEPRECATED - UserV1 usage in stores scheduled for removal (2024-02)
 /**
  * Type guard to check if user is legacy UserV1.
  */
