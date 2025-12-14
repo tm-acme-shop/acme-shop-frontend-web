@@ -71,34 +71,6 @@ src/
 └── utils/              # Utility functions
 ```
 
-## Demo Patterns
-
-This codebase contains patterns for Sourcegraph demos:
-
-### API Migration (v1 → v2)
-- `getUserV1()` vs `getUser()` in services
-- `/api/v1/` vs `/api/v2/` endpoints
-- `UserV1` vs `User` types from shared-ts
-
-### Logging Migration
-- Legacy: `console.log()`, `legacyLog()`
-- Modern: `logger.info({ ... })` with structured data
-
-### Header Migration
-- Legacy: `X-Legacy-User-Id` header
-- Modern: `X-User-Id` header
-
-### Feature Flags
-- `ENABLE_LEGACY_AUTH`
-- `ENABLE_V1_API`
-- `ENABLE_LEGACY_PAYMENTS`
-
-### TODO Comments
-Search for team-tagged TODOs:
-- `TODO(TEAM-FRONTEND)` - Frontend team tasks
-- `TODO(TEAM-API)` - API team tasks
-- `TODO(TEAM-SEC)` - Security team tasks
-
 ## Dependencies
 
 - **@acme-shop/shared-ts** - Shared TypeScript types and API client
