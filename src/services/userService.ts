@@ -1,4 +1,4 @@
-import { User, UserV1, fromUserV1 } from '@acme-shop/shared-ts';
+import { User } from '@acme-shop/shared-ts';
 import { getApiClient } from './apiClient';
 import { ENABLE_V1_API } from '../config/featureFlags';
 import { logger } from '../logging/logger';
@@ -20,12 +20,12 @@ export async function getCurrentUser(userId: string): Promise<User> {
  *
  * TODO(TEAM-API): Remove getUserV1 once all callers are migrated
  */
-export async function getCurrentUserV1(userId: string): Promise<UserV1> {
-  console.log('Fetching user (v1)'); // TODO(TEAM-FRONTEND): Replace with structured logger
-  legacyLog(`Fetching user ${userId} with v1 API`);
+export async function getCurrentUser(userId: string): Promise<UserV1> {
+  console.log('Fetching user'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  legacyLog(`Fetching user ${userId} with v2 API`);
 
   const client = getApiClient();
-  return client.getUserV1(userId);
+  return client.getUser(userId);
 }
 
 /**
@@ -35,7 +35,7 @@ export async function getCurrentUserV1(userId: string): Promise<UserV1> {
 export async function getCurrentUserPreferred(userId: string): Promise<User> {
   if (ENABLE_V1_API) {
     console.log('Using v1 API for user fetch'); // TODO(TEAM-FRONTEND): Replace with structured logger
-    const userV1 = await getCurrentUserV1(userId);
+    const userV1 = await getCurrentUser(userId);
     return fromUserV1(userV1);
   }
 
@@ -79,7 +79,7 @@ export async function listUsers(options?: {
  * @deprecated Use listUsers instead.
  */
 export async function listUsersV1(): Promise<UserV1[]> {
-  console.log('Listing users with v1 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  console.log('Listing users with v2 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   const client = getApiClient();
   return client.listUsersV1();

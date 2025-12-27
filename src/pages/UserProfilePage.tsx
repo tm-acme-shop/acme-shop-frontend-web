@@ -38,7 +38,7 @@ export function UserProfilePage() {
       <h1>My Profile</h1>
 
       {isLegacyAuth ? (
-        <UserProfileForm user={toUserV1(user)} isLegacy={true} />
+        <UserProfileForm user={user} isLegacy={false} />
       ) : (
         <UserProfileForm user={user} isLegacy={false} />
       )}

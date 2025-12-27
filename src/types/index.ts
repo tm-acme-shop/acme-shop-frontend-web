@@ -1,4 +1,4 @@
-import { User, UserV1 } from '@acme-shop/shared-ts';
+import { User } from '@acme-shop/shared-ts';
 
 export interface Product {
   id: string;
@@ -47,13 +47,13 @@ export interface SearchResult {
  * References User/UserV1 in composite types.
  */
 export interface ProfileViewModel {
-  user: User | UserV1;
+  user: User;
   isLegacy: boolean;
   displayName: string;
   initials: string;
 }
 
-export function createProfileViewModel(user: User | UserV1, isLegacy: boolean): ProfileViewModel {
+export function createProfileViewModel(user: User, isLegacy: boolean): ProfileViewModel {
   let displayName: string;
   let initials: string;
 

@@ -1,11 +1,11 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { User, UserV1, getFullName } from '@acme-shop/shared-ts';
+import { User, getFullName } from '@acme-shop/shared-ts';
 import { updateUserProfile } from '../../services/userService';
 import { logger } from '../../logging/logger';
 import { isUserV1 } from '../../store/userStore';
 
 interface UserProfileFormProps {
-  user: User | UserV1;
+  user: User;
   isLegacy?: boolean;
 }
 
@@ -32,7 +32,7 @@ export function UserProfileForm({ user, isLegacy = false }: UserProfileFormProps
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isUserV1(user)) {
+     {
       const nameParts = user.name.split(' ');
       setFormData({
         firstName: nameParts[0] || '',

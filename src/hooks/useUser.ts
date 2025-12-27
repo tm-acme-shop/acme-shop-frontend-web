@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User, UserV1, fromUserV1 } from '@acme-shop/shared-ts';
-import { getCurrentUser, getCurrentUserV1, getCurrentUserPreferred } from '../services/userService';
+import { User } from '@acme-shop/shared-ts';
+import { getCurrentUser, getCurrentUser, getCurrentUserPreferred } from '../services/userService';
 import { ENABLE_V1_API } from '../config/featureFlags';
 import { logger } from '../logging/logger';
 import { getUserId } from '../utils/auth';
@@ -37,8 +37,8 @@ export function useUser(): UseUserResult {
     try {
       if (ENABLE_V1_API) {
         console.log('Fetching user with v1 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
-        const userV1 = await getCurrentUserV1(userId);
-        setUser(fromUserV1(userV1));
+        const user = await getCurrentUser(userId);
+        setUser(user);
       } else {
         logger.info('Fetching user with v2 API', { userId });
         const userData = await getCurrentUser(userId);
