@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ENABLE_LEGACY_AUTH } from '../../config/featureFlags';
+import { ENABLE_NEW_AUTH } from '../../config/featureFlags';
 
 export function Footer() {
   return (
@@ -30,7 +30,7 @@ export function Footer() {
               <Link to="/orders">Order History</Link>
             </li>
             {/* Legacy account settings link kept for migration */}
-            {ENABLE_LEGACY_AUTH && (
+            {ENABLE_NEW_AUTH && (
               <li>
                 <Link to="/legacy-profile">
                   Legacy Account Settings
