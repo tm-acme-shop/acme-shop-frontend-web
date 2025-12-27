@@ -82,7 +82,7 @@ src/
 
 ```bash
 VITE_API_BASE_URL=http://localhost:8080
-VITE_ENABLE_LEGACY_AUTH=false
+VITE_ENABLE_NEW_AUTH=false
 VITE_ENABLE_V1_API=false
 VITE_ENABLE_LEGACY_PAYMENTS=false
 ```

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { ENABLE_LEGACY_AUTH } from '../../config/featureFlags';
+import { ENABLE_NEW_AUTH } from '../../config/featureFlags';
 import { logger } from '../../logging/logger';
 
 interface NavItem {
@@ -24,7 +24,7 @@ export function Navigation() {
     logger.info('Navigation click', { path: item.to, legacy: item.legacy });
   };
 
-  const allItems = ENABLE_LEGACY_AUTH
+  const allItems = ENABLE_NEW_AUTH
     ? [...navItems, ...legacyNavItems]
     : navItems;
 

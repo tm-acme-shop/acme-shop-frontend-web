@@ -1,5 +1,5 @@
 import { Routes as RouterRoutes, Route } from 'react-router-dom';
-import { ENABLE_LEGACY_AUTH } from './config/featureFlags';
+import { ENABLE_NEW_AUTH } from './config/featureFlags';
 import {
   HomePage,
   ProductListPage,
@@ -27,7 +27,7 @@ export function Routes() {
       <Route path="/profile" element={<UserProfilePage />} />
 
       {/* Legacy profile route kept for migration */}
-      {ENABLE_LEGACY_AUTH && (
+      {ENABLE_NEW_AUTH && (
         <Route path="/legacy-profile" element={<UserProfilePage />} />
       )}
 

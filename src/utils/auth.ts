@@ -1,4 +1,4 @@
-import { ENABLE_LEGACY_AUTH } from '../config/featureFlags';
+import { ENABLE_NEW_AUTH } from '../config/featureFlags';
 import { logger } from '../logging/logger';
 
 const AUTH_TOKEN_KEY = 'acme_auth_token';
@@ -26,7 +26,7 @@ export function getLegacyUserId(): string {
  * Get the appropriate user ID based on feature flag.
  */
 export function getCurrentUserId(): string {
-  if (ENABLE_LEGACY_AUTH) {
+  if (ENABLE_NEW_AUTH) {
     return getLegacyUserId();
   }
   return getUserId();
