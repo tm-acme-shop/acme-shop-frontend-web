@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@tm-acme-shop/shared": "^1.0.0",
+    "@tm-acme-shop/shared": "file:../acme-shop-shared-ts",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0"
