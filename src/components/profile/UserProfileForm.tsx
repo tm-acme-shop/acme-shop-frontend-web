@@ -1,5 +1,5 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { User, UserV1 } from '@acme-shop/shared';
+import { User, UserV1 } from '@tm-acme-shop/shared';
 import { updateUserProfile } from '../../services/userService';
 import { logger } from '../../logging/logger';
 import { isUserV1 } from '../../store/userStore';

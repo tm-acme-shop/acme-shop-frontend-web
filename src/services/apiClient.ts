@@ -1,4 +1,4 @@
-import { ApiClient, createApiClient } from '@acme-shop/shared';
+import { ApiClient, createApiClient } from '@tm-acme-shop/shared';
 import { API_BASE_URL, API_TIMEOUT_MS } from '../config/apiConfig';
 import { ENABLE_V1_API } from '../config/featureFlags';
 import { logger } from '../logging/logger';

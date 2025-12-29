@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Order } from '@acme-shop/shared';
+import { Order } from '@tm-acme-shop/shared';
 import { getOrders, getOrder, cancelOrder } from '../services/orderService';
 import { logger } from '../logging/logger';
 import { getUserId } from '../utils/auth';

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Order, formatMoney, canCancel } from '@acme-shop/shared';
+import { Order, formatMoney, canCancel } from '@tm-acme-shop/shared';
 import { useOrders } from '../../hooks/useOrders';
 import { exportOrdersCsv } from '../../services/orderService';
 import { logger } from '../../logging/logger';

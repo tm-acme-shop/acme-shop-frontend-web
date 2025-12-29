@@ -1,4 +1,4 @@
-import { User, UserV1 } from '@acme-shop/shared';
+import { User, UserV1 } from '@tm-acme-shop/shared';
 
 export interface Product {
   id: string;

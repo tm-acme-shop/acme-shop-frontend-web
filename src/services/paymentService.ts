@@ -3,7 +3,7 @@ import {
   ProcessPaymentRequest,
   ProcessPaymentResponse,
   Money,
-} from '@acme-shop/shared';
+} from '@tm-acme-shop/shared';
 import { getApiClient } from './apiClient';
 import { logger } from '../logging/logger';
 

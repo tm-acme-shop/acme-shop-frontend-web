@@ -8,7 +8,7 @@ import {
   X_ACME_REQUEST_ID,
   X_USER_ID,
   X_LEGACY_USER_ID,
-} from '@acme-shop/shared';
+} from '@tm-acme-shop/shared';
 
 export interface RequestConfig {
   headers?: Record<string, string>;

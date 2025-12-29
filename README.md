@@ -73,7 +73,7 @@ src/
 
 ## Dependencies
 
-- **@acme-shop/shared** - Shared TypeScript types and API client
+- **@tm-acme-shop/shared** - Shared TypeScript types and API client
 - **react** - UI framework
 - **react-router-dom** - Client-side routing
 - **vite** - Build tool and dev server

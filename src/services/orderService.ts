@@ -1,4 +1,4 @@
-import { Order } from '@acme-shop/shared';
+import { Order } from '@tm-acme-shop/shared';
 import { getApiClient } from './apiClient';
 import { legacyRequest, modernRequest } from './httpClient';
 import { API_BASE_URL_V1, API_BASE_URL_V2 } from '../config/apiConfig';
