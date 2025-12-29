@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
-import { User, UserV1 } from '@acme-shop/shared-ts';
+import { User, UserV1 } from '@acme-shop/shared';
 import { logger } from '../logging/logger';
 
 // FE-100: Initial frontend with UserV1 types (2022-06)

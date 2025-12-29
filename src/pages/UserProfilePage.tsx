@@ -3,7 +3,7 @@ import { useUser } from '../hooks/useUser';
 import { useLegacyAuth } from '../hooks/useFeatureFlag';
 import { UserProfileForm } from '../components/profile/UserProfileForm';
 import { logger } from '../logging/logger';
-import { toUserV1 } from '@acme-shop/shared-ts';
+import { toUserV1 } from '@acme-shop/shared';
 
 // FE-150: Profile page migrated to User type (2023-09)
 export function UserProfilePage() {

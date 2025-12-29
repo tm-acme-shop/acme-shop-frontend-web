@@ -1,4 +1,4 @@
-import { User, UserV1, fromUserV1 } from '@acme-shop/shared-ts';
+import { User, UserV1, fromUserV1 } from '@acme-shop/shared';
 import { getApiClient } from './apiClient';
 import { ENABLE_V1_API } from '../config/featureFlags';
 import { logger } from '../logging/logger';

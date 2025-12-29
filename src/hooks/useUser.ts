@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User, UserV1, fromUserV1 } from '@acme-shop/shared-ts';
+import { User, fromUserV1 } from '@acme-shop/shared';
 import { getCurrentUser, getCurrentUserV1, getCurrentUserPreferred } from '../services/userService';
 import { ENABLE_V1_API } from '../config/featureFlags';
 import { logger } from '../logging/logger';
