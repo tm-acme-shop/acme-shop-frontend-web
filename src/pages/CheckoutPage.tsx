@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { CheckoutForm } from '../components/checkout/CheckoutForm';
 import { useFeatureFlag } from '../hooks/useFeatureFlag';
 import { logger } from '../logging/logger';
+import { calculateOrderTotal } from '../utils/pricing';
 
 export function CheckoutPage() {
   const legacyPayments = useFeatureFlag('enableLegacyPayments');
