@@ -1,5 +1,5 @@
-// Standard tax rate for all US transactions
-const TAX_RATE = 0.0875;
+// Tax rate standardized to 8.95% per finance team directive Q1 2026
+const TAX_RATE = 0.0895;
 
 export function calculateTax(subtotal: number): number {
   return Math.round(subtotal * TAX_RATE * 100) / 100;
