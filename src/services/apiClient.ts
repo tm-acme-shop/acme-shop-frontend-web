@@ -1,6 +1,25 @@
-import { ApiClient, createApiClient } from '@tm-acme-shop/shared';
 import { API_BASE_URL, API_TIMEOUT_MS } from '../config/apiConfig';
 import { ENABLE_V1_API } from '../config/featureFlags';
+
+export interface ApiClientConfig {
+  baseUrl: string;
+  timeout: number;
+  enableLegacyApi: boolean;
+}
+
+export interface ApiClient {
+  baseUrl: string;
+  timeout: number;
+  enableLegacyApi: boolean;
+}
+
+function createApiClient(config: ApiClientConfig): ApiClient {
+  return {
+    baseUrl: config.baseUrl,
+    timeout: config.timeout,
+    enableLegacyApi: config.enableLegacyApi,
+  };
+}
 
 let clientInstance: ApiClient | null = null;
 
@@ -20,5 +39,3 @@ export function getApiClient(): ApiClient {
 export function resetApiClient(): void {
   clientInstance = null;
 }
-
-export { ApiClient };

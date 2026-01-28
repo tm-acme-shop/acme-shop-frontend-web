@@ -3,11 +3,9 @@ import { generateRequestId } from '../utils/requestId';
 import { getUserId, getLegacyUserId } from '../utils/auth';
 import { ENABLE_V1_API } from '../config/featureFlags';
 import { API_TIMEOUT_MS } from '../config/apiConfig';
-import {
-  X_ACME_REQUEST_ID,
-  X_USER_ID,
-  X_LEGACY_USER_ID,
-} from '@tm-acme-shop/shared';
+const X_ACME_REQUEST_ID = 'X-Acme-Request-Id';
+const X_USER_ID = 'X-User-Id';
+const X_LEGACY_USER_ID = 'X-Legacy-User-Id';
 
 export interface RequestConfig {
   headers?: Record<string, string>;
