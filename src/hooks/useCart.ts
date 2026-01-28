@@ -1,6 +1,5 @@
 import { useContext, useCallback } from 'react';
 import { CartContext } from '../store/cartStore';
-import { logger } from '../logging/logger';
 import { CartItem, Product } from '../types';
 
 export interface UseCartResult {
@@ -35,10 +34,7 @@ export function useCart(): UseCartResult {
         payload: { product, quantity },
       });
 
-      logger.info('Item added to cart', {
-        productId: product.id,
-        quantity,
-      });
+      console.log('Item added to cart'); // TODO(TEAM-FRONTEND): Replace with structured logger
     },
     [dispatch, state.items]
   );
@@ -50,7 +46,7 @@ export function useCart(): UseCartResult {
         payload: { productId },
       });
 
-      logger.info('Item removed from cart', { productId });
+      console.log('Item removed from cart'); // TODO(TEAM-FRONTEND): Replace with structured logger
     },
     [dispatch]
   );
@@ -67,14 +63,14 @@ export function useCart(): UseCartResult {
         payload: { productId, quantity },
       });
 
-      logger.info('Cart item quantity updated', { productId, quantity });
+      console.log('Cart item quantity updated'); // TODO(TEAM-FRONTEND): Replace with structured logger
     },
     [dispatch, removeItem]
   );
 
   const clearCart = useCallback(() => {
     dispatch({ type: 'CLEAR_CART' });
-    logger.info('Cart cleared');
+    console.log('Cart cleared'); // TODO(TEAM-FRONTEND): Replace with structured logger
   }, [dispatch]);
 
   const total = state.items.reduce(

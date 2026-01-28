@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Order } from '@tm-acme-shop/shared';
 import { getOrders, getOrder, cancelOrder } from '../services/orderService';
-import { logger } from '../logging/logger';
 import { getUserId } from '../utils/auth';
 
 export interface UseOrdersResult {
@@ -39,12 +38,12 @@ export function useOrders(): UseOrdersResult {
     setError(null);
 
     try {
-      logger.info('Fetching orders', { userId });
+      console.log('Fetching orders'); // TODO(TEAM-FRONTEND): Replace with structured logger
       const ordersData = await getOrders(userId);
       setOrders(ordersData);
-      logger.info('Orders loaded', { count: ordersData.length });
+      console.log('Orders loaded'); // TODO(TEAM-FRONTEND): Replace with structured logger
     } catch (err) {
-      logger.error('Failed to load orders', { error: String(err) });
+      console.log('Failed to load orders'); // TODO(TEAM-FRONTEND): Replace with structured logger
       setError(err instanceof Error ? err : new Error('Failed to load orders'));
     } finally {
       setLoading(false);
@@ -53,14 +52,14 @@ export function useOrders(): UseOrdersResult {
 
   const handleCancel = useCallback(async (orderId: string) => {
     try {
-      logger.info('Cancelling order', { orderId });
+      console.log('Cancelling order'); // TODO(TEAM-FRONTEND): Replace with structured logger
       const updatedOrder = await cancelOrder(orderId);
       setOrders((prev) =>
         prev.map((order) => (order.id === orderId ? updatedOrder : order))
       );
-      logger.info('Order cancelled', { orderId });
+      console.log('Order cancelled'); // TODO(TEAM-FRONTEND): Replace with structured logger
     } catch (err) {
-      logger.error('Failed to cancel order', { orderId, error: String(err) });
+      console.log('Failed to cancel order'); // TODO(TEAM-FRONTEND): Replace with structured logger
       throw err;
     }
   }, []);
@@ -96,11 +95,11 @@ export function useOrder(orderId: string): UseOrderResult {
     setError(null);
 
     try {
-      logger.info('Fetching order', { orderId });
+      console.log('Fetching order'); // TODO(TEAM-FRONTEND): Replace with structured logger
       const orderData = await getOrder(orderId);
       setOrder(orderData);
     } catch (err) {
-      logger.error('Failed to load order', { orderId, error: String(err) });
+      console.log('Failed to load order'); // TODO(TEAM-FRONTEND): Replace with structured logger
       setError(err instanceof Error ? err : new Error('Failed to load order'));
     } finally {
       setLoading(false);

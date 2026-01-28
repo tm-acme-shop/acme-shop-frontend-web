@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser';
 import { useCart } from '../../hooks/useCart';
-import { logger } from '../../logging/logger';
 import { getUserDisplayName } from '../../store/userStore';
 import { Navigation } from './Navigation';
 
@@ -10,12 +9,11 @@ export function Header() {
   const { itemCount } = useCart();
 
   const handleProfileClick = () => {
-    console.log('Profile clicked'); // TODO(TEAM-FRONTEND): Remove console.log once analytics pipeline is verified
-    logger.info('UI event', { ui_event: 'profile_click' });
+    console.log('Profile clicked'); // TODO(TEAM-FRONTEND): Replace with structured logger
   };
 
   const handleCartClick = () => {
-    logger.info('UI event', { ui_event: 'cart_click', itemCount });
+    console.log('UI event: cart_click'); // TODO(TEAM-FRONTEND): Replace with structured logger
   };
 
   return (

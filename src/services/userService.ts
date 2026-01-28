@@ -1,14 +1,13 @@
 import { User, UserV1, fromUserV1 } from '@tm-acme-shop/shared';
 import { getApiClient } from './apiClient';
 import { ENABLE_V1_API } from '../config/featureFlags';
-import { logger } from '../logging/logger';
 import { legacyLog } from '../logging/legacyLogger';
 
 /**
  * Get the current user using the v2 API.
  */
 export async function getCurrentUser(userId: string): Promise<User> {
-  logger.info('Fetching current user', { userId, apiVersion: 'v2' });
+  console.log('Fetching current user', userId); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   const client = getApiClient();
   return client.getUser(userId);
@@ -39,7 +38,7 @@ export async function getCurrentUserPreferred(userId: string): Promise<User> {
     return fromUserV1(userV1);
   }
 
-  logger.info('Using v2 API for user fetch', { userId });
+  console.log('Using v2 API for user fetch', userId); // TODO(TEAM-FRONTEND): Replace with structured logger
   return getCurrentUser(userId);
 }
 
@@ -50,7 +49,7 @@ export async function updateUserProfile(
   userId: string,
   data: { firstName?: string; lastName?: string }
 ): Promise<User> {
-  logger.info('Updating user profile', { userId });
+  console.log('Updating user profile', userId); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   const client = getApiClient();
   return client.updateUser(userId, data);
@@ -64,7 +63,7 @@ export async function listUsers(options?: {
   limit?: number;
   offset?: number;
 }): Promise<User[]> {
-  logger.info('Listing users', { options });
+  console.log('Listing users'); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   const client = getApiClient();
   const response = await client.listUsers({

@@ -1,13 +1,12 @@
 import { ApiClient, createApiClient } from '@tm-acme-shop/shared';
 import { API_BASE_URL, API_TIMEOUT_MS } from '../config/apiConfig';
 import { ENABLE_V1_API } from '../config/featureFlags';
-import { logger } from '../logging/logger';
 
 let clientInstance: ApiClient | null = null;
 
 export function getApiClient(): ApiClient {
   if (!clientInstance) {
-    logger.info('Creating API client', { baseUrl: API_BASE_URL });
+    console.log('Creating API client', API_BASE_URL); // TODO(TEAM-FRONTEND): Replace with structured logger
 
     clientInstance = createApiClient({
       baseUrl: API_BASE_URL,

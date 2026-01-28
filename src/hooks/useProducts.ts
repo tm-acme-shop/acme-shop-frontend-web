@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getProducts, getProduct, getFeaturedProducts, searchProducts } from '../services/productService';
-import { logger } from '../logging/logger';
 import { Product } from '../types';
 
 export interface UseProductsResult {
@@ -32,11 +31,11 @@ export function useProducts(options?: {
     setError(null);
 
     try {
-      logger.info('Fetching products', { options });
+      console.log('Fetching products'); // TODO(TEAM-FRONTEND): Replace with structured logger
       const data = await getProducts(options);
       setProducts(data);
     } catch (err) {
-      logger.error('Failed to load products', { error: String(err) });
+      console.log('Failed to load products'); // TODO(TEAM-FRONTEND): Replace with structured logger
       setError(err instanceof Error ? err : new Error('Failed to load products'));
     } finally {
       setLoading(false);
@@ -77,7 +76,7 @@ export function useProduct(productId: string): UseProductResult {
         setProduct(data);
       })
       .catch((err) => {
-        logger.error('Failed to load product', { productId, error: String(err) });
+        console.log('Failed to load product'); // TODO(TEAM-FRONTEND): Replace with structured logger
         setError(err instanceof Error ? err : new Error('Failed to load product'));
       })
       .finally(() => {
@@ -104,7 +103,7 @@ export function useFeaturedProducts(): UseProductsResult {
       const data = await getFeaturedProducts();
       setProducts(data);
     } catch (err) {
-      logger.error('Failed to load featured products', { error: String(err) });
+      console.log('Failed to load featured products'); // TODO(TEAM-FRONTEND): Replace with structured logger
       setError(err instanceof Error ? err : new Error('Failed to load featured products'));
     } finally {
       setLoading(false);
@@ -144,7 +143,7 @@ export function useProductSearch(query: string): UseProductsResult {
       const data = await searchProducts(query);
       setProducts(data);
     } catch (err) {
-      logger.error('Product search failed', { query, error: String(err) });
+      console.log('Product search failed'); // TODO(TEAM-FRONTEND): Replace with structured logger
       setError(err instanceof Error ? err : new Error('Search failed'));
     } finally {
       setLoading(false);

@@ -1,6 +1,5 @@
 import { modernRequest } from './httpClient';
 import { API_BASE_URL_V2 } from '../config/apiConfig';
-import { logger } from '../logging/logger';
 import { Product, ProductListResponse } from '../types';
 
 /**
@@ -15,7 +14,7 @@ export async function getProducts(options?: {
   limit?: number;
   offset?: number;
 }): Promise<Product[]> {
-  logger.info('Fetching products', { options });
+  console.log('Fetching products'); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   const params = new URLSearchParams();
   if (options?.category) params.append('category', options.category);
@@ -34,7 +33,7 @@ export async function getProducts(options?: {
  * Get a single product by ID.
  */
 export async function getProduct(productId: string): Promise<Product> {
-  logger.info('Fetching product', { productId });
+  console.log('Fetching product', productId); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   const response = await modernRequest<Product>(
     'GET',
@@ -47,7 +46,7 @@ export async function getProduct(productId: string): Promise<Product> {
  * Get featured products for homepage.
  */
 export async function getFeaturedProducts(): Promise<Product[]> {
-  logger.info('Fetching featured products');
+  console.log('Fetching featured products'); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   const response = await modernRequest<ProductListResponse>(
     'GET',
@@ -60,7 +59,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
  * Search products by query.
  */
 export async function searchProducts(query: string): Promise<Product[]> {
-  logger.info('Searching products', { query });
+  console.log('Searching products', query); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   return getProducts({ search: query });
 }

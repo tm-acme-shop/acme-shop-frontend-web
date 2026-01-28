@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
 import { useLegacyAuth } from '../hooks/useFeatureFlag';
 import { UserProfileForm } from '../components/profile/UserProfileForm';
-import { logger } from '../logging/logger';
 import { toUserV1 } from '@tm-acme-shop/shared';
 
 // FE-150: Profile page migrated to User type (2023-09)
@@ -11,10 +10,7 @@ export function UserProfilePage() {
   const isLegacyAuth = useLegacyAuth();
 
   useEffect(() => {
-    logger.info('Page view', {
-      page: 'profile',
-      usingLegacyUser: isLegacyAuth,
-    });
+    console.log('Page view', { page: 'profile', usingLegacyUser: isLegacyAuth }); // TODO(TEAM-FRONTEND): Replace with structured logger
   }, [isLegacyAuth]);
 
   if (loading) {

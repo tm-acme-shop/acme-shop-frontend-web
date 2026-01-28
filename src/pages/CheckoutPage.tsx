@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 import { CheckoutForm } from '../components/checkout/CheckoutForm';
 import { useFeatureFlag } from '../hooks/useFeatureFlag';
-import { logger } from '../logging/logger';
 import { calculateOrderTotal } from '../utils/pricing';
 
 export function CheckoutPage() {
   const legacyPayments = useFeatureFlag('enableLegacyPayments');
 
   useEffect(() => {
-    logger.info('Page view', { page: 'checkout' });
+    console.log('Page view', { page: 'checkout' }); // TODO(TEAM-FRONTEND): Replace with structured logger
   }, []);
 
   return (

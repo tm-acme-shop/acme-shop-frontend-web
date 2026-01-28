@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
 import { useUser } from '../../hooks/useUser';
 import { processPayment } from '../../services/paymentService';
-import { logger } from '../../logging/logger';
 import { formatCurrency } from '../../utils/formatCurrency';
 
 interface FormData {
@@ -50,10 +49,7 @@ export function CheckoutForm() {
     setSubmitting(true);
     setError(null);
 
-    logger.info('Checkout submit', {
-      event: 'checkout_submit',
-      cartSize: items.length,
-    });
+    console.log('Checkout submit'); // TODO(TEAM-FRONTEND): Replace with structured logger
 
     try {
       if (!user) {
@@ -74,7 +70,7 @@ export function CheckoutForm() {
         throw new Error('Payment failed');
       }
     } catch (err) {
-      logger.error('Checkout failed', { error: String(err) });
+      console.log('Checkout failed'); // TODO(TEAM-FRONTEND): Replace with structured logger
       setError(err instanceof Error ? err.message : 'Payment failed');
     } finally {
       setSubmitting(false);

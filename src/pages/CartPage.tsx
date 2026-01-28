@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 import { CartSummary } from '../components/cart/CartSummary';
-import { logger } from '../logging/logger';
 
 export function CartPage() {
   useEffect(() => {
-    logger.info('Page view', { page: 'cart' });
+    console.log('Page view', { page: 'cart' }); // TODO(TEAM-FRONTEND): Replace with structured logger
   }, []);
 
   return (

@@ -1,4 +1,3 @@
-import { logger } from '../logging/logger';
 import { legacyLog } from '../logging/legacyLogger';
 import { generateRequestId } from '../utils/requestId';
 import { getUserId, getLegacyUserId } from '../utils/auth';
@@ -99,11 +98,7 @@ export async function modernRequest<T>(
     ...config?.headers,
   };
 
-  logger.info('HTTP request', {
-    method,
-    url,
-    requestId,
-  });
+  console.log('HTTP request', method, url); // TODO(TEAM-FRONTEND): Replace with structured logger
 
   const controller = new AbortController();
   const timeout = config?.timeout || API_TIMEOUT_MS;
@@ -120,17 +115,13 @@ export async function modernRequest<T>(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      logger.error('HTTP error', { method, url, status: response.status });
+      console.log('HTTP error', method, url, response.status); // TODO(TEAM-FRONTEND): Replace with structured logger
       throw new Error(`HTTP error: ${response.status}`);
     }
 
     const data = response.status === 204 ? (undefined as T) : await response.json();
 
-    logger.debug('HTTP response', {
-      method,
-      url,
-      status: response.status,
-    });
+    console.log('HTTP response', method, url, response.status); // TODO(TEAM-FRONTEND): Replace with structured logger
 
     return {
       data,
@@ -139,7 +130,7 @@ export async function modernRequest<T>(
     };
   } catch (error) {
     clearTimeout(timeoutId);
-    logger.error('Request failed', { method, url, error: String(error) });
+    console.log('Request failed', method, url, error); // TODO(TEAM-FRONTEND): Replace with structured logger
     throw error;
   }
 }

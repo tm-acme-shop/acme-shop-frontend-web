@@ -1,5 +1,4 @@
 import { ENABLE_LEGACY_AUTH } from '../config/featureFlags';
-import { logger } from '../logging/logger';
 
 const AUTH_TOKEN_KEY = 'acme_auth_token';
 const USER_ID_KEY = 'acme_user_id';
@@ -9,7 +8,7 @@ const LEGACY_USER_ID_KEY = 'acme_legacy_user_id';
  * Get the current user ID for X-User-Id header.
  */
 export function getUserId(): string {
-  logger.debug('Getting user ID', { legacy: false });
+  console.log('Getting user ID'); // TODO(TEAM-FRONTEND): Replace with structured logger
   return localStorage.getItem(USER_ID_KEY) || '';
 }
 
@@ -36,7 +35,7 @@ export function getCurrentUserId(): string {
  * Set the current user ID.
  */
 export function setUserId(userId: string): void {
-  logger.info('Setting user ID', { userId });
+  console.log('Setting user ID'); // TODO(TEAM-FRONTEND): Replace with structured logger
   localStorage.setItem(USER_ID_KEY, userId);
   localStorage.setItem(LEGACY_USER_ID_KEY, userId);
 }
@@ -52,7 +51,7 @@ export function getAuthToken(): string | null {
  * Set the auth token.
  */
 export function setAuthToken(token: string): void {
-  logger.info('Setting auth token');
+  console.log('Setting auth token'); // TODO(TEAM-FRONTEND): Replace with structured logger
   localStorage.setItem(AUTH_TOKEN_KEY, token);
 }
 
@@ -60,7 +59,7 @@ export function setAuthToken(token: string): void {
  * Clear all auth data.
  */
 export function clearAuth(): void {
-  logger.info('Clearing auth data');
+  console.log('Clearing auth data'); // TODO(TEAM-FRONTEND): Replace with structured logger
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(USER_ID_KEY);
   localStorage.removeItem(LEGACY_USER_ID_KEY);
