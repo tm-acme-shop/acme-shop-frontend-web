@@ -1,4 +1,4 @@
-import { legacyLog } from '../logging/legacyLogger';
+import { logger } from '../logging/logger';
 import { generateRequestId } from '../utils/requestId';
 import { getUserId, getLegacyUserId } from '../utils/auth';
 import { ENABLE_V1_API } from '../config/featureFlags';
@@ -34,7 +34,7 @@ export async function legacyRequest<T>(
   const requestId = generateRequestId();
   const legacyUserId = getLegacyUserId();
 
-  console.log('Making legacy request', url); // TODO(TEAM-FRONTEND): Replace with structured logger
+  logger.warn('Making legacy request', { url });
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export async function legacyRequest<T>(
     ...config?.headers,
   };
 
-  legacyLog(`HTTP ${method} ${url}`);
+  logger.warn('Legacy HTTP request', { method, url });
 
   const controller = new AbortController();
   const timeout = config?.timeout || API_TIMEOUT_MS;
@@ -72,7 +72,7 @@ export async function legacyRequest<T>(
     };
   } catch (error) {
     clearTimeout(timeoutId);
-    legacyLog(`Request failed: ${String(error)}`);
+    logger.error('Legacy request failed', { error: String(error) });
     throw error;
   }
 }
@@ -96,7 +96,7 @@ export async function modernRequest<T>(
     ...config?.headers,
   };
 
-  console.log('HTTP request', method, url); // TODO(TEAM-FRONTEND): Replace with structured logger
+  logger.debug('HTTP request', { method, url });
 
   const controller = new AbortController();
   const timeout = config?.timeout || API_TIMEOUT_MS;
@@ -113,13 +113,13 @@ export async function modernRequest<T>(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.log('HTTP error', method, url, response.status); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.error('HTTP error', { method, url, status: response.status });
       throw new Error(`HTTP error: ${response.status}`);
     }
 
     const data = response.status === 204 ? (undefined as T) : await response.json();
 
-    console.log('HTTP response', method, url, response.status); // TODO(TEAM-FRONTEND): Replace with structured logger
+    logger.debug('HTTP response', { method, url, status: response.status });
 
     return {
       data,
@@ -128,7 +128,7 @@ export async function modernRequest<T>(
     };
   } catch (error) {
     clearTimeout(timeoutId);
-    console.log('Request failed', method, url, error); // TODO(TEAM-FRONTEND): Replace with structured logger
+    logger.error('Request failed', { method, url, error: String(error) });
     throw error;
   }
 }

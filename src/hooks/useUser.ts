@@ -3,6 +3,7 @@ import { User, fromUserV1 } from '@tm-acme-shop/shared';
 import { getCurrentUser, getCurrentUserV1, getCurrentUserPreferred } from '../services/userService';
 import { ENABLE_V1_API } from '../config/featureFlags';
 import { getUserId } from '../utils/auth';
+import { logger } from '../logging/logger';
 
 export interface UseUserResult {
   user: User | null;
@@ -21,7 +22,7 @@ export function useUser(): UseUserResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  console.log('useUser mounted'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  logger.debug('useUser mounted');
 
   const fetchUser = useCallback(async () => {
     const userId = getUserId();
@@ -35,18 +36,18 @@ export function useUser(): UseUserResult {
 
     try {
       if (ENABLE_V1_API) {
-        console.log('Fetching user with v1 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
+        logger.warn('Fetching user with v1 API');
         const userV1 = await getCurrentUserV1(userId);
         setUser(fromUserV1(userV1));
       } else {
-        console.log('Fetching user with v2 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
+        logger.debug('Fetching user with v2 API');
         const userData = await getCurrentUser(userId);
         setUser(userData);
       }
 
-      console.log('User loaded'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('User loaded');
     } catch (err) {
-      console.log('Failed to load user'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.error('Failed to load user');
       setError(err instanceof Error ? err : new Error('Failed to load user'));
     } finally {
       setLoading(false);
@@ -85,9 +86,9 @@ export function useUserById(userId: string): UseUserResult {
     try {
       const userData = await getCurrentUserPreferred(userId);
       setUser(userData);
-      console.log('User loaded by ID'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('User loaded by ID');
     } catch (err) {
-      console.log('Failed to load user by ID'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.error('Failed to load user by ID');
       setError(err instanceof Error ? err : new Error('Failed to load user'));
     } finally {
       setLoading(false);

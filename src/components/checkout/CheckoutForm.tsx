@@ -4,6 +4,7 @@ import { useCart } from '../../hooks/useCart';
 import { useUser } from '../../hooks/useUser';
 import { processPayment } from '../../services/paymentService';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { logger } from '../../logging/logger';
 
 interface FormData {
   cardNumber: string;
@@ -49,7 +50,7 @@ export function CheckoutForm() {
     setSubmitting(true);
     setError(null);
 
-    console.log('Checkout submit'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    logger.info('Checkout submit');
 
     try {
       if (!user) {
@@ -70,7 +71,7 @@ export function CheckoutForm() {
         throw new Error('Payment failed');
       }
     } catch (err) {
-      console.log('Checkout failed'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.error('Checkout failed');
       setError(err instanceof Error ? err.message : 'Payment failed');
     } finally {
       setSubmitting(false);

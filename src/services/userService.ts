@@ -1,13 +1,13 @@
 import { User, UserV1, fromUserV1 } from '@tm-acme-shop/shared';
 import { getApiClient } from './apiClient';
 import { ENABLE_V1_API } from '../config/featureFlags';
-import { legacyLog } from '../logging/legacyLogger';
+import { logger } from '../logging/logger';
 
 /**
  * Get the current user using the v2 API.
  */
 export async function getCurrentUser(userId: string): Promise<User> {
-  console.log('Fetching current user', userId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  logger.debug('Fetching current user', { userId });
 
   const client = getApiClient();
   return client.getUser(userId);
@@ -20,8 +20,8 @@ export async function getCurrentUser(userId: string): Promise<User> {
  * TODO(TEAM-API): Remove getUserV1 once all callers are migrated
  */
 export async function getCurrentUserV1(userId: string): Promise<UserV1> {
-  console.log('Fetching user (v1)'); // TODO(TEAM-FRONTEND): Replace with structured logger
-  legacyLog(`Fetching user ${userId} with v1 API`);
+  logger.warn('Fetching user (v1)');
+  logger.warn('Fetching user with v1 API', { userId });
 
   const client = getApiClient();
   return client.getUserV1(userId);
@@ -33,12 +33,12 @@ export async function getCurrentUserV1(userId: string): Promise<UserV1> {
  */
 export async function getCurrentUserPreferred(userId: string): Promise<User> {
   if (ENABLE_V1_API) {
-    console.log('Using v1 API for user fetch'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    logger.warn('Using v1 API for user fetch');
     const userV1 = await getCurrentUserV1(userId);
     return fromUserV1(userV1);
   }
 
-  console.log('Using v2 API for user fetch', userId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  logger.debug('Using v2 API for user fetch', { userId });
   return getCurrentUser(userId);
 }
 
@@ -49,7 +49,7 @@ export async function updateUserProfile(
   userId: string,
   data: { firstName?: string; lastName?: string }
 ): Promise<User> {
-  console.log('Updating user profile', userId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  logger.info('Updating user profile', { userId });
 
   const client = getApiClient();
   return client.updateUser(userId, data);
@@ -63,7 +63,7 @@ export async function listUsers(options?: {
   limit?: number;
   offset?: number;
 }): Promise<User[]> {
-  console.log('Listing users'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  logger.debug('Listing users');
 
   const client = getApiClient();
   const response = await client.listUsers({
@@ -78,7 +78,7 @@ export async function listUsers(options?: {
  * @deprecated Use listUsers instead.
  */
 export async function listUsersV1(): Promise<UserV1[]> {
-  console.log('Listing users with v1 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  logger.warn('Listing users with v1 API');
 
   const client = getApiClient();
   return client.listUsersV1();

@@ -1,5 +1,6 @@
 import { createContext, useReducer, ReactNode, Dispatch } from 'react';
 import { CartItem, Product } from '../types';
+import { logger } from '../logging/logger';
 
 export interface CartState {
   items: CartItem[];
@@ -28,7 +29,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         (item) => item.productId === product.id
       );
 
-      console.log('Cart add item'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('Cart add item');
 
       if (existingIndex >= 0) {
         const items = [...state.items];
@@ -55,7 +56,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
 
     case 'REMOVE_ITEM': {
-      console.log('Cart remove item'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('Cart remove item');
       return {
         ...state,
         items: state.items.filter(
@@ -66,7 +67,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 
     case 'UPDATE_QUANTITY': {
       const { productId, quantity } = action.payload;
-      console.log('Cart update quantity'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('Cart update quantity');
 
       return {
         ...state,
@@ -77,7 +78,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
 
     case 'CLEAR_CART': {
-      console.log('Cart cleared'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('Cart cleared');
       return initialState;
     }
 

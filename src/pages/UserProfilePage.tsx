@@ -3,6 +3,7 @@ import { useUser } from '../hooks/useUser';
 import { useLegacyAuth } from '../hooks/useFeatureFlag';
 import { UserProfileForm } from '../components/profile/UserProfileForm';
 import { toUserV1 } from '@tm-acme-shop/shared';
+import { logger } from '../logging/logger';
 
 // FE-150: Profile page migrated to User type (2023-09)
 export function UserProfilePage() {
@@ -10,7 +11,7 @@ export function UserProfilePage() {
   const isLegacyAuth = useLegacyAuth();
 
   useEffect(() => {
-    console.log('Page view', { page: 'profile', usingLegacyUser: isLegacyAuth }); // TODO(TEAM-FRONTEND): Replace with structured logger
+    logger.debug('Page view', { page: 'profile', usingLegacyUser: isLegacyAuth });
   }, [isLegacyAuth]);
 
   if (loading) {

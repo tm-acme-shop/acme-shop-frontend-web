@@ -1,6 +1,7 @@
 import { useContext, useCallback } from 'react';
 import { CartContext } from '../store/cartStore';
 import { CartItem, Product } from '../types';
+import { logger } from '../logging/logger';
 
 export interface UseCartResult {
   items: CartItem[];
@@ -27,14 +28,14 @@ export function useCart(): UseCartResult {
 
   const addItem = useCallback(
     (product: Product, quantity: number = 1) => {
-      console.log('Cart updated', state.items); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('Cart updated', { itemCount: state.items.length });
 
       dispatch({
         type: 'ADD_ITEM',
         payload: { product, quantity },
       });
 
-      console.log('Item added to cart'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('Item added to cart');
     },
     [dispatch, state.items]
   );
@@ -46,7 +47,7 @@ export function useCart(): UseCartResult {
         payload: { productId },
       });
 
-      console.log('Item removed from cart'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('Item removed from cart');
     },
     [dispatch]
   );
@@ -63,14 +64,14 @@ export function useCart(): UseCartResult {
         payload: { productId, quantity },
       });
 
-      console.log('Cart item quantity updated'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.debug('Cart item quantity updated');
     },
     [dispatch, removeItem]
   );
 
   const clearCart = useCallback(() => {
     dispatch({ type: 'CLEAR_CART' });
-    console.log('Cart cleared'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    logger.debug('Cart cleared');
   }, [dispatch]);
 
   const total = state.items.reduce(

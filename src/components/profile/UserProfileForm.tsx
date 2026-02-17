@@ -2,6 +2,7 @@ import { useState, FormEvent, useEffect } from 'react';
 import { User, UserV1 } from '@tm-acme-shop/shared';
 import { updateUserProfile } from '../../services/userService';
 import { isUserV1 } from '../../store/userStore';
+import { logger } from '../../logging/logger';
 
 interface UserProfileFormProps {
   user: User | UserV1;
@@ -60,7 +61,7 @@ export function UserProfileForm({ user, isLegacy = false }: UserProfileFormProps
     setError(null);
     setSuccess(false);
 
-    console.log('Profile update submitted'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    logger.info('Profile update submitted');
 
     try {
       await updateUserProfile(user.id, {
@@ -69,9 +70,9 @@ export function UserProfileForm({ user, isLegacy = false }: UserProfileFormProps
       });
 
       setSuccess(true);
-      console.log('Profile updated successfully'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.info('Profile updated successfully');
     } catch (err) {
-      console.log('Profile update failed'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      logger.error('Profile update failed');
       setError(err instanceof Error ? err.message : 'Update failed');
     } finally {
       setSubmitting(false);
