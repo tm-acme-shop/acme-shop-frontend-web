@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { ENABLE_LEGACY_AUTH } from '../../config/featureFlags';
+import { createLogger } from '../../logging';
 
 interface NavItem {
   to: string;
@@ -18,9 +19,11 @@ const legacyNavItems: NavItem[] = [
   { to: '/legacy-profile', label: 'Legacy Profile', legacy: true },
 ];
 
+const log = createLogger('navigation');
+
 export function Navigation() {
   const handleNavClick = (item: NavItem) => {
-    console.log('Navigation click'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Navigation click', { to: item.to, label: item.label });
   };
 
   const allItems = ENABLE_LEGACY_AUTH

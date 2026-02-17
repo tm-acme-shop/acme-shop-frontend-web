@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import { ProductCard } from './ProductCard';
+import { createLogger } from '../../logging';
+
+const log = createLogger('product-list');
 
 interface ProductListProps {
   category?: string;
@@ -15,7 +18,7 @@ export function ProductList({ category, search }: ProductListProps) {
   const { products, loading, error } = useProducts({ category, search });
 
   useEffect(() => {
-    console.log('ProductList mounted'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.debug('ProductList mounted');
   }, []);
 
   if (loading) {

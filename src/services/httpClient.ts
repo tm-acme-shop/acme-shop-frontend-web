@@ -3,9 +3,11 @@ import { generateRequestId } from '../utils/requestId';
 import { getUserId, getLegacyUserId } from '../utils/auth';
 import { ENABLE_V1_API } from '../config/featureFlags';
 import { API_TIMEOUT_MS } from '../config/apiConfig';
+import { createLogger } from '../logging';
 const X_ACME_REQUEST_ID = 'X-Acme-Request-Id';
 const X_USER_ID = 'X-User-Id';
 const X_LEGACY_USER_ID = 'X-Legacy-User-Id';
+const log = createLogger('http-client');
 
 export interface RequestConfig {
   headers?: Record<string, string>;
@@ -34,7 +36,7 @@ export async function legacyRequest<T>(
   const requestId = generateRequestId();
   const legacyUserId = getLegacyUserId();
 
-  console.log('Making legacy request', url); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Making legacy request', { url });
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -96,7 +98,7 @@ export async function modernRequest<T>(
     ...config?.headers,
   };
 
-  console.log('HTTP request', method, url); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('HTTP request', { method, url });
 
   const controller = new AbortController();
   const timeout = config?.timeout || API_TIMEOUT_MS;
@@ -113,13 +115,13 @@ export async function modernRequest<T>(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.log('HTTP error', method, url, response.status); // TODO(TEAM-FRONTEND): Replace with structured logger
+      log.warn('HTTP error', { method, url, status: response.status });
       throw new Error(`HTTP error: ${response.status}`);
     }
 
     const data = response.status === 204 ? (undefined as T) : await response.json();
 
-    console.log('HTTP response', method, url, response.status); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.debug('HTTP response', { method, url, status: response.status });
 
     return {
       data,
@@ -128,7 +130,7 @@ export async function modernRequest<T>(
     };
   } catch (error) {
     clearTimeout(timeoutId);
-    console.log('Request failed', method, url, error); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.error('Request failed', { method, url, error: String(error) });
     throw error;
   }
 }

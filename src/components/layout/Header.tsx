@@ -3,17 +3,20 @@ import { useUser } from '../../hooks/useUser';
 import { useCart } from '../../hooks/useCart';
 import { getUserDisplayName } from '../../store/userStore';
 import { Navigation } from './Navigation';
+import { createLogger } from '../../logging';
+
+const log = createLogger('header');
 
 export function Header() {
   const { user } = useUser();
   const { itemCount } = useCart();
 
   const handleProfileClick = () => {
-    console.log('Profile clicked'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Profile clicked');
   };
 
   const handleCartClick = () => {
-    console.log('UI event: cart_click'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('UI event: cart_click');
   };
 
   return (

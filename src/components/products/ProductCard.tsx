@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Product } from '../../types';
+import { createLogger } from '../../logging';
+
+const log = createLogger('product-card');
 
 interface ProductCardProps {
   product: Product;
@@ -16,7 +19,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
 
   const handleAddToCart = () => {
-    console.log('Product added to cart'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Product added to cart', { productId: product.id });
     addItem(product);
   };
 

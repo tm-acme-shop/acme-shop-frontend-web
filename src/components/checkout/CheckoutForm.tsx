@@ -4,6 +4,7 @@ import { useCart } from '../../hooks/useCart';
 import { useUser } from '../../hooks/useUser';
 import { processPayment } from '../../services/paymentService';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { createLogger } from '../../logging';
 
 interface FormData {
   cardNumber: string;
@@ -15,6 +16,8 @@ interface FormData {
   billingState: string;
   billingZip: string;
 }
+
+const log = createLogger('checkout');
 
 /**
  * CheckoutForm handles payment and address entry.
@@ -49,7 +52,7 @@ export function CheckoutForm() {
     setSubmitting(true);
     setError(null);
 
-    console.log('Checkout submit'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Checkout submit', { itemCount: items.length, total });
 
     try {
       if (!user) {
@@ -70,7 +73,7 @@ export function CheckoutForm() {
         throw new Error('Payment failed');
       }
     } catch (err) {
-      console.log('Checkout failed'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      log.error('Checkout failed');
       setError(err instanceof Error ? err.message : 'Payment failed');
     } finally {
       setSubmitting(false);

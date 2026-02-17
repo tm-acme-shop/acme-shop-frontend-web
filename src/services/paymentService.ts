@@ -5,6 +5,9 @@ import {
   Money,
 } from '@tm-acme-shop/shared';
 import { getApiClient } from './apiClient';
+import { createLogger } from '../logging';
+
+const log = createLogger('payment-service');
 
 /**
  * Process a payment for an order.
@@ -15,7 +18,7 @@ export async function processPayment(
   amount: Money,
   cardToken: string
 ): Promise<ProcessPaymentResponse> {
-  console.log('Processing payment', orderId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Processing payment', { orderId });
 
   const client = getApiClient();
   const request: ProcessPaymentRequest = {
@@ -29,7 +32,7 @@ export async function processPayment(
 
   const response = await client.processPayment(request);
 
-  console.log('Payment completed'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Payment completed');
 
   return response;
 }
@@ -38,7 +41,7 @@ export async function processPayment(
  * Get payment status.
  */
 export async function getPayment(paymentId: string): Promise<Payment> {
-  console.log('Fetching payment', paymentId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Fetching payment', { paymentId });
 
   const client = getApiClient();
   return client.getPayment(paymentId);
@@ -52,7 +55,7 @@ export async function refundPayment(
   amount: Money,
   reason: string
 ): Promise<void> {
-  console.log('Processing refund', paymentId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Processing refund', { paymentId });
 
   const client = getApiClient();
   await client.refundPayment({
@@ -61,7 +64,7 @@ export async function refundPayment(
     reason,
   });
 
-  console.log('Refund completed', paymentId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Refund completed', { paymentId });
 }
 
 /**

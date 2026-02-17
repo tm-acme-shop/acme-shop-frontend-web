@@ -1,3 +1,7 @@
+import { createLogger } from '../logging';
+
+const log = createLogger('request-id');
+
 /**
  * Generate a unique request ID for API calls.
  * Used to set X-Acme-Request-ID header.
@@ -15,7 +19,7 @@ export function generateRequestId(): string {
  * @deprecated Use generateRequestId for API requests.
  */
 export function generateUUID(): string {
-  console.log('Using deprecated generateUUID'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.warn('Using deprecated generateUUID');
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;

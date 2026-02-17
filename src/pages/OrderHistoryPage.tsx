@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
 import { OrderHistoryTable } from '../components/orders/OrderHistoryTable';
+import { createLogger } from '../logging';
+
+const log = createLogger('order-history-page');
 
 /**
  * OrderHistoryPage wraps OrderHistoryTable.
@@ -9,7 +12,7 @@ import { OrderHistoryTable } from '../components/orders/OrderHistoryTable';
  */
 export function OrderHistoryPage() {
   useEffect(() => {
-    console.log('Page view', { page: 'order_history' }); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Page view', { page: 'order_history' });
   }, []);
 
   return (

@@ -1,5 +1,8 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { User, UserV1 } from '@tm-acme-shop/shared';
+import { createLogger } from '../logging';
+
+const log = createLogger('user-store');
 
 // FE-100: Initial frontend with UserV1 types (2022-06)
 /**
@@ -33,7 +36,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<UserState>(initialState);
 
   const setUser = useCallback((user: User | UserV1, isLegacy: boolean = false) => {
-    console.log('Setting user in store'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Setting user in store', { isLegacy });
 
     setState({
       user,
@@ -43,7 +46,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const clearUser = useCallback(() => {
-    console.log('Clearing user from store'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Clearing user from store');
     setState(initialState);
   }, []);
 

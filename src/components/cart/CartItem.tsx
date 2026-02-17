@@ -1,6 +1,9 @@
 import { useCart } from '../../hooks/useCart';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { CartItem as CartItemType } from '../../types';
+import { createLogger } from '../../logging';
+
+const log = createLogger('cart-item');
 
 interface CartItemProps {
   item: CartItemType;
@@ -10,7 +13,7 @@ export function CartItem({ item }: CartItemProps) {
   const { updateQuantity, removeItem } = useCart();
 
   const handleQuantityChange = (newQuantity: number) => {
-    console.log('Cart item quantity changed', newQuantity); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Cart item quantity changed', { productId: item.productId, newQuantity });
     updateQuantity(item.productId, newQuantity);
   };
 

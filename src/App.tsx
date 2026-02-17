@@ -4,13 +4,16 @@ import { CartProvider } from './store/cartStore';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { ENABLE_LEGACY_AUTH } from './config/featureFlags';
+import { createLogger } from './logging';
+
+const log = createLogger('app');
 
 export function App() {
   if (ENABLE_LEGACY_AUTH) {
-    console.log('Legacy auth enabled'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.warn('Legacy auth enabled');
   }
 
-  console.log('App rendered'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.debug('App rendered');
 
   return (
     <UserProvider>

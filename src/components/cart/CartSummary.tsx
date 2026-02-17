@@ -2,12 +2,15 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { CartItem } from './CartItem';
+import { createLogger } from '../../logging';
+
+const log = createLogger('cart-summary');
 
 export function CartSummary() {
   const { items, total, itemCount } = useCart();
 
   const handleCheckout = () => {
-    console.log('Checkout initiated'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Checkout initiated', { itemCount, total });
   };
 
   if (items.length === 0) {

@@ -2,10 +2,13 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useFeaturedProducts } from '../hooks/useProducts';
 import { ProductCard } from '../components/products/ProductCard';
+import { createLogger } from '../logging';
+
+const log = createLogger('home-page');
 
 export function HomePage() {
   useEffect(() => {
-    console.log('Page view', { page: 'home' }); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Page view', { page: 'home' });
   }, []);
 
   const { products, loading } = useFeaturedProducts();

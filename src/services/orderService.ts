@@ -2,12 +2,15 @@ import { Order } from '@tm-acme-shop/shared';
 import { getApiClient } from './apiClient';
 import { legacyRequest, modernRequest } from './httpClient';
 import { API_BASE_URL_V1, API_BASE_URL_V2 } from '../config/apiConfig';
+import { createLogger } from '../logging';
+
+const log = createLogger('order-service');
 
 /**
  * Get orders for the current user.
  */
 export async function getOrders(userId: string): Promise<Order[]> {
-  console.log('Fetching orders', userId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Fetching orders', { userId });
 
   const client = getApiClient();
   const response = await client.listOrders({
@@ -22,7 +25,7 @@ export async function getOrders(userId: string): Promise<Order[]> {
  * Get a single order by ID.
  */
 export async function getOrder(orderId: string): Promise<Order> {
-  console.log('Fetching order', orderId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Fetching order', { orderId });
 
   const client = getApiClient();
   return client.getOrder(orderId);
@@ -35,7 +38,7 @@ export async function getOrder(orderId: string): Promise<Order> {
  * TODO(TEAM-API): Migrate order export endpoint to v2 API and new headers
  */
 export async function exportOrdersCsv(userId: string): Promise<Blob> {
-  console.log('Exporting orders to CSV'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Exporting orders to CSV');
 
   const response = await legacyRequest<Blob>(
     'GET',
@@ -54,7 +57,7 @@ export async function exportOrdersCsv(userId: string): Promise<Blob> {
  * Export orders to PDF - uses modern endpoint.
  */
 export async function exportOrdersPdf(userId: string): Promise<Blob> {
-  console.log('Exporting orders to PDF', userId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Exporting orders to PDF', { userId });
 
   const response = await modernRequest<Blob>(
     'GET',
@@ -73,7 +76,7 @@ export async function exportOrdersPdf(userId: string): Promise<Blob> {
  * Cancel an order.
  */
 export async function cancelOrder(orderId: string): Promise<Order> {
-  console.log('Cancelling order', orderId); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.info('Cancelling order', { orderId });
 
   const client = getApiClient();
   return client.updateOrderStatus(orderId, {

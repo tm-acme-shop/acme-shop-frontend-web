@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom';
 import { Order, formatMoney, canCancel } from '@tm-acme-shop/shared';
 import { useOrders } from '../../hooks/useOrders';
 import { exportOrdersCsv } from '../../services/orderService';
+import { createLogger } from '../../logging';
+
+const log = createLogger('order-history-table');
 
 /**
  * OrderHistoryTable displays a table of user orders.
@@ -11,7 +14,7 @@ export function OrderHistoryTable() {
   const { orders, loading, error, cancel } = useOrders();
 
   const handleExportCsv = async () => {
-    console.log('Exporting orders to CSV'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Exporting orders to CSV');
     try {
       const blob = await exportOrdersCsv('current-user');
       const url = URL.createObjectURL(blob);
@@ -21,16 +24,16 @@ export function OrderHistoryTable() {
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
-      console.log('Failed to export orders'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      log.error('Failed to export orders');
     }
   };
 
   const handleCancel = async (orderId: string) => {
-    console.log('Cancelling order from table'); // TODO(TEAM-FRONTEND): Replace with structured logger
+    log.info('Cancelling order from table', { orderId });
     try {
       await cancel(orderId);
     } catch (err) {
-      console.log('Failed to cancel order'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      log.error('Failed to cancel order', { orderId });
     }
   };
 

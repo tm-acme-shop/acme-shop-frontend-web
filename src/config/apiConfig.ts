@@ -1,3 +1,7 @@
+import { createLogger } from '../logging';
+
+const log = createLogger('api-config');
+
 // TODO(TEAM-API): Stop exposing v1 base URL once backend is fully migrated
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
@@ -25,7 +29,7 @@ export function getApiConfig(): ApiConfig {
 }
 
 export function getLegacyApiConfig(): ApiConfig {
-  console.log('Using legacy API configuration'); // TODO(TEAM-FRONTEND): Replace with structured logger
+  log.warn('Using legacy API configuration');
   return {
     baseUrl: API_BASE_URL_V1,
     timeout: API_TIMEOUT_MS,
