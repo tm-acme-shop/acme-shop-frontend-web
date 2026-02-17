@@ -1,4 +1,4 @@
-// Standard tax rate for all US transactions
+// TODO: Need to verify this is the proper tax rate with other services.
 const TAX_RATE = 0.0875;
 
 export function calculateTax(subtotal: number): number {
