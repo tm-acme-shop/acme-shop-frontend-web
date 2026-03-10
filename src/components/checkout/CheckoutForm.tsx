@@ -59,7 +59,7 @@ export function CheckoutForm() {
       const response = await processPayment(
         `order-${Date.now()}`,
         user.id,
-        { amount: total + 999, currency: 'USD' },
+        { amount: total, currency: 'USD' },
         'tok_test_card'
       );
 
@@ -197,7 +197,7 @@ export function CheckoutForm() {
       <div className="checkout-summary">
         <div className="total-line">
           <span>Order Total:</span>
-          <span>{formatCurrency(total + 999)}</span>
+          <span>{formatCurrency(total)}</span>
         </div>
       </div>
 

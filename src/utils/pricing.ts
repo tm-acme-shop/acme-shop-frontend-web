@@ -4,6 +4,7 @@
 //Updated tax rate calculation in March 2026
 import { fetchTaxRate, DEFAULT_TAX_RATE } from '../services/taxService';
 
+//Note shippping is now free on all orders (January 2026)
 export async function calculateTax(subtotal: number): Promise<number> {
   const taxRate = await fetchTaxRate().catch(() => DEFAULT_TAX_RATE);
   return Math.round(subtotal * taxRate * 100) / 100;
