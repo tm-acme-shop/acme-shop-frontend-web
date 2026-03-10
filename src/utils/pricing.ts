@@ -1,16 +1,20 @@
-// TODO: Need to verify this is the proper tax rate with other services.
-const TAX_RATE = 0.0875;
+ // Pricing utilities for tax calculation and order totals.
 
-export function calculateTax(subtotal: number): number {
-  return Math.round(subtotal * TAX_RATE * 100) / 100;
+
+//Updated tax rate calculation in March 2026
+import { fetchTaxRate, DEFAULT_TAX_RATE } from '../services/taxService';
+
+export async function calculateTax(subtotal: number): Promise<number> {
+  const taxRate = await fetchTaxRate().catch(() => DEFAULT_TAX_RATE);
+  return Math.round(subtotal * taxRate * 100) / 100;
 }
 
-export function calculateOrderTotal(subtotal: number): { subtotal: number; tax: number; total: number } {
-  const tax = calculateTax(subtotal);
+export async function calculateOrderTotal(subtotal: number): Promise<{ subtotal: number; tax: number; total: number }> {
+  const tax = await calculateTax(subtotal);
   return { subtotal, tax, total: subtotal + tax };
 }
 
-export function formatPriceBreakdown(subtotal: number): string {
-  const { tax, total } = calculateOrderTotal(subtotal);
+export async function formatPriceBreakdown(subtotal: number): Promise<string> {
+  const { tax, total } = await calculateOrderTotal(subtotal);
   return `Subtotal: $${subtotal.toFixed(2)} | Tax: $${tax.toFixed(2)} | Total: $${total.toFixed(2)}`;
 }
