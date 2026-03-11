@@ -1,5 +1,4 @@
- // Pricing utilities for tax calculation and order totals.
-
+// Pricing utilities for tax calculation and order totals.
 
 //Updated tax rate calculation in March 2026
 import { fetchTaxRate, DEFAULT_TAX_RATE } from '../services/taxService';

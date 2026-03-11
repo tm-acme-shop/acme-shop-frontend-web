@@ -1,9 +1,10 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
 import { useUser } from '../../hooks/useUser';
 import { processPayment } from '../../services/paymentService';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { calculateOrderTotal } from '../../utils/pricing';
 
 interface FormData {
   cardNumber: string;
@@ -36,8 +37,13 @@ export function CheckoutForm() {
     billingState: '',
     billingZip: '',
   });
+  const [orderTotal, setOrderTotal] = useState(total);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    calculateOrderTotal(total).then(({ total: computed }) => setOrderTotal(computed));
+  }, [total]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,7 +65,7 @@ export function CheckoutForm() {
       const response = await processPayment(
         `order-${Date.now()}`,
         user.id,
-        { amount: total, currency: 'USD' },
+        { amount: orderTotal, currency: 'USD' },
         'tok_test_card'
       );
 
@@ -197,7 +203,7 @@ export function CheckoutForm() {
       <div className="checkout-summary">
         <div className="total-line">
           <span>Order Total:</span>
-          <span>{formatCurrency(total)}</span>
+          <span>{formatCurrency(orderTotal)}</span>
         </div>
       </div>
 
