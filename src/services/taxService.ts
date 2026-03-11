@@ -5,9 +5,7 @@
 
 import { modernRequest } from './httpClient';
 import { API_BASE_URL_V2 } from '../config/apiConfig';
-import { createLogger } from '../logging';
-
-const log = createLogger('tax-service');
+import { legacyLog, legacyWarn } from '../logging';
 
 interface StripeTaxRate {
   id: string;
@@ -33,7 +31,7 @@ export async function fetchTaxRate(): Promise<number> {
     return cachedTaxRate;
   }
 
-  log.info('Fetching tax rate from Stripe');
+  legacyLog('Fetching tax rate from Stripe');
 
   const response = await modernRequest<TaxRateListResponse>(
     'GET',
@@ -42,15 +40,19 @@ export async function fetchTaxRate(): Promise<number> {
 
   const rates = response.data.data;
   if (rates.length > 0) {
+    // Use the Stripe Tax Rates API value as the primary/default tax rate
     cachedTaxRate = rates[0].percentage / 100;
-    log.info('Tax rate fetched', { percentage: rates[0].percentage, jurisdiction: rates[0].jurisdiction });
+    legacyLog(`Tax rate fetched: ${rates[0].percentage}% (${rates[0].jurisdiction})`);
     return cachedTaxRate;
   }
 
-  log.warn('No active tax rates found, using default');
+  // Stripe rate unavailable — fall back to the hard-coded default
+  legacyWarn('No active tax rates found, using default');
   return DEFAULT_TAX_RATE;
 }
 
+// Hard-coded fallback tax rate (8.75%) used only when the Stripe API is unreachable
+// or returns no active tax rates.
 export const DEFAULT_TAX_RATE = 0.0875;
 
 export function clearTaxRateCache(): void {
