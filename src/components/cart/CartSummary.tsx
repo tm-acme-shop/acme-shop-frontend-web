@@ -37,12 +37,12 @@ export function CartSummary() {
           <span>{formatCurrency(total)}</span>
         </div>
         <div className="shipping">
-          <span>Estimated Shipping:</span>
-          <span>{formatCurrency(999)}</span>
+          <span>Shipping:</span>
+          <span>Free</span>
         </div>
         <div className="total">
           <span>Total:</span>
-          <span>{formatCurrency(total + 999)}</span>
+          <span>{formatCurrency(total)}</span>
         </div>
       </div>
 
