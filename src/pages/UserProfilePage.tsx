@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
 import { useLegacyAuth } from '../hooks/useFeatureFlag';
 import { UserProfileForm } from '../components/profile/UserProfileForm';
-import { toUserV1 } from '@tm-acme-shop/shared';
 
 // FE-150: Profile page migrated to User type (2023-09)
 export function UserProfilePage() {
@@ -34,7 +33,7 @@ export function UserProfilePage() {
       <h1>My Profile</h1>
 
       {isLegacyAuth ? (
-        <UserProfileForm user={toUserV1(user)} isLegacy={true} />
+        <UserProfileForm user={user} isLegacy={true} />
       ) : (
         <UserProfileForm user={user} isLegacy={false} />
       )}

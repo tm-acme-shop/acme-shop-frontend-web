@@ -1,10 +1,9 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { User, UserV1 } from '@tm-acme-shop/shared';
+import { User } from '@tm-acme-shop/shared';
 import { updateUserProfile } from '../../services/userService';
-import { isUserV1 } from '../../store/userStore';
 
 interface UserProfileFormProps {
-  user: User | UserV1;
+  user: User;
   isLegacy?: boolean;
 }
 
@@ -16,9 +15,7 @@ interface FormData {
 
 /**
  * UserProfileForm handles user profile editing.
- * Accepts either User or UserV1 props, with internal mapping from legacy fields.
- *
- * TODO(TEAM-FRONTEND): Remove support for UserV1 once migration is complete
+ * Accepts the current User model.
  */
 export function UserProfileForm({ user, isLegacy = false }: UserProfileFormProps) {
   const [formData, setFormData] = useState<FormData>({
@@ -31,20 +28,11 @@ export function UserProfileForm({ user, isLegacy = false }: UserProfileFormProps
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isUserV1(user)) {
-      const nameParts = user.name.split(' ');
-      setFormData({
-        firstName: nameParts[0] || '',
-        lastName: nameParts.slice(1).join(' ') || '',
-        email: user.email,
-      });
-    } else {
-      setFormData({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      });
-    }
+    setFormData({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    });
   }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

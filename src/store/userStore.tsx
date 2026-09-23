@@ -1,23 +1,18 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { User, UserV1 } from '@tm-acme-shop/shared';
 
-// FE-100: Initial frontend with UserV1 types (2022-06)
 /**
- * UserState uses union type User | UserV1 to show type-level legacy vs new.
- * NOTE: UserV1 kept for backwards compatibility with legacy profile page.
- *
- * TODO(TEAM-API): Remove UserV1 from store once profile page is fully migrated
+ * User state shared by profile and checkout consumers.
  */
 export interface UserState {
-  user: User | UserV1 | null;
+  user: User | null;
   isLegacy: boolean;
   isAuthenticated: boolean;
 }
 
-// API-140: Introduce User type alongside UserV1 (2023-02)
 export interface UserContextValue {
   state: UserState;
-  setUser: (user: User | UserV1, isLegacy?: boolean) => void;
+  setUser: (user: User, isLegacy?: boolean) => void;
   clearUser: () => void;
 }
 
@@ -32,7 +27,7 @@ export const UserContext = createContext<UserContextValue | null>(null);
 export function UserProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<UserState>(initialState);
 
-  const setUser = useCallback((user: User | UserV1, isLegacy: boolean = false) => {
+  const setUser = useCallback((user: User, isLegacy: boolean = false) => {
     console.log('Setting user in store'); // TODO(TEAM-FRONTEND): Replace with structured logger
 
     setState({
@@ -71,11 +66,8 @@ export function isUserV1(user: User | UserV1): user is UserV1 {
 }
 
 /**
- * Get user display name, handling both User and UserV1.
+ * Get a user's display name.
  */
-export function getUserDisplayName(user: User | UserV1): string {
-  if (isUserV1(user)) {
-    return user.name;
-  }
+export function getUserDisplayName(user: User): string {
   return `${user.firstName} ${user.lastName}`;
 }
