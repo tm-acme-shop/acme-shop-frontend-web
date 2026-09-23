@@ -1,4 +1,4 @@
-import { User, UserV1 } from '@tm-acme-shop/shared';
+import { User } from '@tm-acme-shop/shared';
 
 export interface Product {
   id: string;
@@ -44,27 +44,17 @@ export interface SearchResult {
 
 /**
  * Profile view model that bridges shared-ts models and UI.
- * References User/UserV1 in composite types.
  */
 export interface ProfileViewModel {
-  user: User | UserV1;
+  user: User;
   isLegacy: boolean;
   displayName: string;
   initials: string;
 }
 
-export function createProfileViewModel(user: User | UserV1, isLegacy: boolean): ProfileViewModel {
-  let displayName: string;
-  let initials: string;
-
-  if ('firstName' in user) {
-    displayName = `${user.firstName} ${user.lastName}`;
-    initials = `${user.firstName[0]}${user.lastName[0]}`;
-  } else {
-    displayName = user.name;
-    const parts = user.name.split(' ');
-    initials = parts.length > 1 ? `${parts[0][0]}${parts[1][0]}` : parts[0][0];
-  }
+export function createProfileViewModel(user: User, isLegacy: boolean): ProfileViewModel {
+  const displayName = `${user.firstName} ${user.lastName}`;
+  const initials = `${user.firstName[0]}${user.lastName[0]}`;
 
   return {
     user,
