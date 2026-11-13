@@ -1,7 +1,6 @@
 import { legacyLog } from '../logging/legacyLogger';
 import { generateRequestId } from '../utils/requestId';
 import { getUserId, getLegacyUserId } from '../utils/auth';
-import { ENABLE_V1_API } from '../config/featureFlags';
 import { API_TIMEOUT_MS } from '../config/apiConfig';
 const X_ACME_REQUEST_ID = 'X-Acme-Request-Id';
 const X_USER_ID = 'X-User-Id';
@@ -134,7 +133,7 @@ export async function modernRequest<T>(
 }
 
 /**
- * Make an HTTP request, choosing between legacy and modern headers based on feature flag.
+ * Make an HTTP request using modern headers.
  */
 export async function request<T>(
   method: string,
@@ -142,8 +141,5 @@ export async function request<T>(
   body?: unknown,
   config?: RequestConfig
 ): Promise<HttpResponse<T>> {
-  if (ENABLE_V1_API) {
-    return legacyRequest<T>(method, url, body, config);
-  }
   return modernRequest<T>(method, url, body, config);
 }
