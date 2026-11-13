@@ -1,7 +1,7 @@
 import { Order } from '@tm-acme-shop/shared';
 import { getApiClient } from './apiClient';
-import { legacyRequest, modernRequest } from './httpClient';
-import { API_BASE_URL_V1, API_BASE_URL_V2 } from '../config/apiConfig';
+import { modernRequest } from './httpClient';
+import { API_BASE_URL_V2 } from '../config/apiConfig';
 
 /**
  * Get orders for the current user.
@@ -29,17 +29,14 @@ export async function getOrder(orderId: string): Promise<Order> {
 }
 
 /**
- * Export orders to CSV - still uses legacy endpoint.
- * @deprecated This endpoint uses v1 API with legacy headers.
- *
- * TODO(TEAM-API): Migrate order export endpoint to v2 API and new headers
+ * Export orders to CSV - uses modern endpoint.
  */
 export async function exportOrdersCsv(userId: string): Promise<Blob> {
   console.log('Exporting orders to CSV'); // TODO(TEAM-FRONTEND): Replace with structured logger
 
-  const response = await legacyRequest<Blob>(
+  const response = await modernRequest<Blob>(
     'GET',
-    `${API_BASE_URL_V1}/users/${userId}/orders/export`,
+    `${API_BASE_URL_V2}/users/${userId}/orders/export`,
     undefined,
     {
       headers: {

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User, fromUserV1 } from '@tm-acme-shop/shared';
-import { getCurrentUser, getCurrentUserV1, getCurrentUserPreferred } from '../services/userService';
-import { ENABLE_V1_API } from '../config/featureFlags';
+import { User } from '@tm-acme-shop/shared';
+import { getCurrentUser } from '../services/userService';
 import { getUserId } from '../utils/auth';
 
 export interface UseUserResult {
@@ -13,8 +12,6 @@ export interface UseUserResult {
 
 /**
  * Hook to manage current user state.
- *
- * TODO(TEAM-FRONTEND): Remove legacy branch once ENABLE_V1_API is false in all envs
  */
 export function useUser(): UseUserResult {
   const [user, setUser] = useState<User | null>(null);
@@ -34,15 +31,9 @@ export function useUser(): UseUserResult {
     setError(null);
 
     try {
-      if (ENABLE_V1_API) {
-        console.log('Fetching user with v1 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
-        const userV1 = await getCurrentUserV1(userId);
-        setUser(fromUserV1(userV1));
-      } else {
-        console.log('Fetching user with v2 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
-        const userData = await getCurrentUser(userId);
-        setUser(userData);
-      }
+      console.log('Fetching user with v2 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
+      const userData = await getCurrentUser(userId);
+      setUser(userData);
 
       console.log('User loaded'); // TODO(TEAM-FRONTEND): Replace with structured logger
     } catch (err) {
@@ -83,7 +74,7 @@ export function useUserById(userId: string): UseUserResult {
     setError(null);
 
     try {
-      const userData = await getCurrentUserPreferred(userId);
+      const userData = await getCurrentUser(userId);
       setUser(userData);
       console.log('User loaded by ID'); // TODO(TEAM-FRONTEND): Replace with structured logger
     } catch (err) {

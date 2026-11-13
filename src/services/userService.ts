@@ -1,7 +1,5 @@
-import { User, UserV1, fromUserV1 } from '@tm-acme-shop/shared';
+import { User } from '@tm-acme-shop/shared';
 import { getApiClient } from './apiClient';
-import { ENABLE_V1_API } from '../config/featureFlags';
-import { legacyLog } from '../logging/legacyLogger';
 
 /**
  * Get the current user using the v2 API.
@@ -11,35 +9,6 @@ export async function getCurrentUser(userId: string): Promise<User> {
 
   const client = getApiClient();
   return client.getUser(userId);
-}
-
-/**
- * Get the current user using the v1 API.
- * @deprecated Use getCurrentUser instead.
- *
- * TODO(TEAM-API): Remove getUserV1 once all callers are migrated
- */
-export async function getCurrentUserV1(userId: string): Promise<UserV1> {
-  console.log('Fetching user (v1)'); // TODO(TEAM-FRONTEND): Replace with structured logger
-  legacyLog(`Fetching user ${userId} with v1 API`);
-
-  const client = getApiClient();
-  return client.getUserV1(userId);
-}
-
-/**
- * Get the current user, using v1 or v2 API based on feature flag.
- * Always returns a User object (converts v1 if needed).
- */
-export async function getCurrentUserPreferred(userId: string): Promise<User> {
-  if (ENABLE_V1_API) {
-    console.log('Using v1 API for user fetch'); // TODO(TEAM-FRONTEND): Replace with structured logger
-    const userV1 = await getCurrentUserV1(userId);
-    return fromUserV1(userV1);
-  }
-
-  console.log('Using v2 API for user fetch', userId); // TODO(TEAM-FRONTEND): Replace with structured logger
-  return getCurrentUser(userId);
 }
 
 /**
@@ -71,15 +40,4 @@ export async function listUsers(options?: {
     offset: options?.offset || 0,
   });
   return response.users;
-}
-
-/**
- * List all users using the legacy v1 API.
- * @deprecated Use listUsers instead.
- */
-export async function listUsersV1(): Promise<UserV1[]> {
-  console.log('Listing users with v1 API'); // TODO(TEAM-FRONTEND): Replace with structured logger
-
-  const client = getApiClient();
-  return client.listUsersV1();
 }
