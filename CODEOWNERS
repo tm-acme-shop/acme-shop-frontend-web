@@ -1,1 +1,5 @@
+# Default owner for everything not matched below.
 * @elly-zietz
+
+# Platform team: CI/CD, container and infrastructure config.
+/.github/ @tm-acme-shop/platform-team
